@@ -3,550 +3,583 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>황경산 서대문구의원 후보 | 정의당 마선거구 (남가좌동·북가좌동)</title>
-  <!-- 페이퍼로지 (제목용) -->
+  <title>황경산 | 정의당 서대문구의원 후보 · 마선거구</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orizon-design/paperlogy@1.0/dist/Paperlogy.css" />
-  <!-- Pretendard (본문용) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@latest/dist/web/static/pretendard.css" />
   <style>
-    /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --primary: #1a1a2e;
-      --accent:  #FFD400;
-      --accent-dark: #e0bb00;
-      --light:   #f5f5f0;
-      --text:    #1a1a2e;
-      --muted:   #666;
-      --radius:  8px;
-      --shadow:  0 4px 20px rgba(0,0,0,.08);
+      --accent:   #FFD400;
+      --dark:     #1a1a2e;
+      --darker:   #0d0d1a;
+      --card:     #ffffff;
+      --light:    #f7f7f5;
+      --muted:    #888;
+      --text:     #1a1a2e;
+      --radius:   18px;
+      --col:      440px;
     }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-      color: var(--text); background: #fff;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
       letter-spacing: -0.03em;
+      min-height: 100vh;
+      background: #e5e1d8;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px 12px 80px;
     }
-    h1, h2, h3, h4,
-    .section-title, .hero-name, .gnb-logo,
-    .pledge-title, .tl-title, .stat-num,
-    .profile-info h3, .hero-slogan {
-      font-family: 'Paperlogy', 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+
+    /* ── Floating pill (scroll-triggered, fixed) ── */
+    #float-icons {
+      position: fixed;
+      top: 36px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-12px);
+      z-index: 500;
+      opacity: 0; pointer-events: none;
+      transition: opacity .28s ease, transform .28s ease;
+    }
+    #float-icons.visible {
+      opacity: 1; pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    #float-pill {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px;
+      width: min(370px, calc(100vw - 48px));
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.55);
+      border-radius: 40px;
+      padding: 8px 12px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.16);
+    }
+    .float-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(26,26,46,.08); border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s; flex-shrink: 0;
+    }
+    .float-btn:hover { background: rgba(26,26,46,.15); }
+    .float-btn svg { width: 17px; height: 17px; }
+    .float-photo {
+      width: 38px; height: 38px; border-radius: 50%;
+      object-fit: cover; flex-shrink: 0;
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 2px rgba(26,26,46,.12);
+    }
+    .float-center {
+      display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;
+    }
+    .float-name {
+      font-family: 'Paperlogy', 'Pretendard', sans-serif;
+      font-size: 1.5rem; font-weight: 900; color: var(--dark);
+      white-space: nowrap; line-height: 1;
+    }
+    .float-name em { color: var(--accent); font-style: normal; }
+    h1, h2, h3, h4, .stat-num, .pledge-title, .tl-title {
+      font-family: 'Paperlogy', 'Pretendard', sans-serif;
     }
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; }
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-    .section { padding: 80px 0; }
-    .section-title {
-      font-size: 2rem; font-weight: 800; text-align: center;
-      margin-bottom: 12px; color: var(--primary);
-    }
-    .section-subtitle {
-      text-align: center; color: var(--muted); margin-bottom: 56px; font-size: 1rem;
+
+    /* ── Page column (phone frame) ── */
+    .page {
+      width: 100%;
+      max-width: var(--col);
+      background: #fff;
+      border-radius: 40px;
+      border: 6px solid var(--dark);
+      box-shadow: 0 28px 80px rgba(0,0,0,.28);
+      overflow: hidden;
     }
 
-    /* ── GNB ── */
-    #gnb {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
-      background: rgba(255,255,255,.96); backdrop-filter: blur(8px);
-      border-bottom: 1px solid #e8e8e8;
-      transition: box-shadow .3s;
+    /* ── Padded inner content ── */
+    .page-content {
+      padding: 0 16px 56px;
     }
-    #gnb.scrolled { box-shadow: 0 2px 12px rgba(0,0,0,.12); }
-    .gnb-inner {
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-    }
-    .gnb-logo { font-size: 1.25rem; font-weight: 900; color: var(--primary); display: flex; align-items: center; gap: 8px; }
-    .gnb-name { color: var(--primary); }
-    .gnb-name em { color: var(--accent); font-style: normal; }
-    .gnb-party-logo { height: 22px; width: auto; display: block; }
-    .gnb-nav { display: flex; gap: 32px; list-style: none; }
-    .gnb-nav a { font-size: .95rem; font-weight: 600; color: var(--text); transition: color .2s; }
-    .gnb-nav a:hover { color: var(--accent); }
-    .gnb-cta {
-      background: var(--accent); color: #1a1a2e;
-      padding: 8px 20px; border-radius: 24px;
-      font-size: .9rem; font-weight: 700;
-      transition: opacity .2s;
-    }
-    .gnb-cta:hover { opacity: .85; }
-    .gnb-hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
-    .gnb-hamburger span { display: block; width: 24px; height: 2px; background: var(--text); transition: .3s; }
 
-    /* ── Hero ── */
-    #hero {
-      min-height: 100vh; display: flex; align-items: center;
-      background: linear-gradient(135deg, #0d0d1a 0%, #1a1a2e 55%, #2a2a40 100%);
-      color: #fff; padding-top: 64px;
+    /* ── Profile header ── */
+    .profile-header {
+      text-align: center;
+      padding: 48px 20px 28px;
+      color: #fff;
+      background: linear-gradient(160deg, var(--darker) 0%, #1e1e35 55%, #2a1f3d 100%);
     }
-    .hero-inner {
-      display: grid; grid-template-columns: 1fr 400px; gap: 60px; align-items: center;
+    .party-logo-wrap {
+      display: flex; justify-content: center; margin-bottom: 24px;
     }
-    .hero-tag {
-      display: inline-block; background: var(--accent); color: #1a1a2e;
-      padding: 4px 14px; border-radius: 20px;
-      font-size: .85rem; font-weight: 700; letter-spacing: .04em;
-      margin-bottom: 20px;
+    .party-logo-wrap img { height: 28px; width: auto; }
+    .profile-photo-wrap {
+      position: relative; display: inline-block; margin-bottom: 20px;
     }
-    .hero-name { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
-    .hero-name em { color: var(--accent); font-style: normal; }
-    .hero-role { font-size: 1.2rem; opacity: .85; margin-bottom: 24px; }
-    .hero-slogan {
-      font-size: 1.5rem; font-weight: 700; line-height: 1.6;
-      border-left: 4px solid var(--accent); padding-left: 18px;
-      margin-bottom: 40px;
+    .profile-photo {
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 0 5px rgba(255,212,0,.2);
     }
-    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
-    .btn-primary {
-      background: var(--accent); color: #1a1a2e;
-      padding: 14px 32px; border-radius: 32px;
-      font-size: 1rem; font-weight: 700; transition: transform .2s, opacity .2s;
+    .profile-name {
+      font-size: 2.4rem; font-weight: 900; line-height: 1;
+      margin-bottom: 8px;
     }
-    .btn-primary:hover { transform: translateY(-2px); opacity: .9; }
-    .btn-outline {
-      border: 2px solid rgba(255,255,255,.6); color: #fff;
-      padding: 14px 32px; border-radius: 32px;
-      font-size: 1rem; font-weight: 600; transition: background .2s;
+    .profile-name em { color: var(--accent); font-style: normal; }
+    .profile-role {
+      font-size: .9rem; opacity: .7; margin-bottom: 6px; font-weight: 500;
     }
-    .btn-outline:hover { background: rgba(255,255,255,.15); }
-    .hero-photo-wrap {
-      position: relative; display: flex; justify-content: center;
+    .profile-district {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,212,0,.15); border: 1px solid rgba(255,212,0,.3);
+      color: var(--accent); padding: 4px 14px; border-radius: 20px;
+      font-size: .82rem; font-weight: 700; margin-bottom: 22px;
     }
-    .hero-photo {
-      width: 340px; height: 420px; object-fit: cover;
-      border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    .profile-slogan {
+      font-size: 1.05rem; font-weight: 600; line-height: 1.7;
+      color: rgba(255,255,255,.85);
+      background: rgba(255,255,255,.06);
+      border-left: 3px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      text-align: left;
     }
-    .hero-photo-placeholder {
-      width: 340px; height: 420px; border-radius: 24px;
-      background: rgba(255,255,255,.1); border: 2px dashed rgba(255,255,255,.3);
-      display: flex; align-items: center; justify-content: center;
-      color: rgba(255,255,255,.5); font-size: .9rem; flex-direction: column; gap: 8px;
-    }
-    .hero-photo-placeholder svg { width: 48px; height: 48px; opacity: .4; }
 
-    /* ── Stats Bar ── */
-    #stats { background: var(--accent); color: var(--primary); padding: 28px 0; }
-    .stats-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      text-align: center; gap: 20px;
+    /* ── Stats ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      background: var(--accent); border-radius: var(--radius);
+      padding: 18px 8px; margin-bottom: 12px; text-align: center;
+      gap: 4px;
     }
-    .stat-num { font-size: 2.4rem; font-weight: 900; line-height: 1; }
-    .stat-label { font-size: .85rem; opacity: .7; margin-top: 4px; font-weight: 600; }
+    .stat-num {
+      font-size: 1.7rem; font-weight: 900; color: var(--dark); line-height: 1;
+    }
+    .stat-label {
+      font-size: .68rem; font-weight: 700; color: rgba(26,26,46,.65);
+      margin-top: 3px; word-break: keep-all;
+    }
 
-    /* ── Profile ── */
-    #profile { background: var(--light); }
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
-    .profile-info h3 { font-size: 1.4rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
-    .profile-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    /* ── Cards ── */
+    .card {
+      background: var(--card); border-radius: var(--radius);
+      margin-bottom: 12px; overflow: hidden;
+      box-shadow: 0 2px 16px rgba(0,0,0,.18);
+    }
+
+    /* ── Accordion ── */
+    .acc-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px; background: none; border: none; cursor: pointer;
+      font-family: inherit; font-size: 1rem; font-weight: 700;
+      color: var(--text); letter-spacing: -0.03em;
+    }
+    .acc-trigger .acc-left { display: flex; align-items: center; gap: 10px; }
+    .acc-trigger .acc-icon { font-size: 1.3rem; }
+    .acc-trigger .acc-arrow {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--light); display: flex; align-items: center; justify-content: center;
+      font-size: .8rem; transition: transform .3s; flex-shrink: 0;
+    }
+    .acc-trigger[aria-expanded="true"] .acc-arrow { transform: rotate(180deg); }
+    .acc-body {
+      display: none; padding: 0 22px 20px;
+    }
+    .acc-body.open { display: block; }
+
+    /* ── Profile content ── */
+    .profile-bio {
+      font-size: .95rem; line-height: 1.85; color: #444;
+      border-bottom: 1px solid #f0f0f0; padding-bottom: 18px; margin-bottom: 18px;
+    }
+    .profile-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
     .profile-list li {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 12px 16px; background: #fff; border-radius: var(--radius);
-      box-shadow: var(--shadow);
+      display: flex; gap: 10px; align-items: flex-start;
+      padding: 10px 14px; background: var(--light); border-radius: 10px;
     }
-    .profile-list .badge {
-      min-width: 64px; background: var(--primary); color: #fff;
-      font-size: .75rem; font-weight: 700; text-align: center;
-      padding: 3px 8px; border-radius: 4px;
+    .badge {
+      min-width: 48px; background: var(--dark); color: #fff;
+      font-size: .7rem; font-weight: 700; text-align: center;
+      padding: 2px 6px; border-radius: 4px; flex-shrink: 0;
     }
-    .profile-list .detail { font-size: .95rem; color: var(--text); line-height: 1.5; }
-    .profile-bio { font-size: 1.05rem; line-height: 1.9; color: #444; }
+    .badge-accent { background: var(--accent); color: var(--dark); }
+    .detail { font-size: .88rem; color: var(--text); line-height: 1.5; }
 
     /* ── Pledges ── */
-    .pledges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
-    .pledge-card {
-      background: var(--light); border-radius: 16px; padding: 36px 28px;
-      border-top: 4px solid var(--primary); transition: transform .25s, box-shadow .25s;
-      cursor: default;
+    .pledge-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #f0f0f0;
     }
-    .pledge-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); }
-    .pledge-num {
-      font-size: 2.5rem; font-weight: 900; color: var(--primary); opacity: .15;
-      line-height: 1; margin-bottom: 8px;
+    .pledge-item:last-child { border-bottom: none; }
+    .pledge-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
     }
-    .pledge-icon { font-size: 2.2rem; margin-bottom: 16px; }
-    .pledge-title { font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
-    .pledge-desc { font-size: .9rem; line-height: 1.7; color: var(--muted); }
-    .pledge-items { margin-top: 14px; list-style: none; display: flex; flex-direction: column; gap: 6px; }
-    .pledge-items li { font-size: .88rem; color: #555; }
-    .pledge-items li::before { content: '▸ '; color: var(--accent); font-size: .8rem; }
+    .pledge-num-badge {
+      min-width: 28px; height: 28px; background: var(--dark); color: #fff;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 900; flex-shrink: 0;
+    }
+    .pledge-title { font-size: .98rem; font-weight: 800; color: var(--dark); }
+    .pledge-icon-sm { font-size: 1.1rem; }
+    .pledge-sub {
+      margin-left: 38px;
+      font-size: .83rem; color: var(--muted); line-height: 1.6;
+    }
+    .pledge-sub li { list-style: none; }
+    .pledge-sub li::before { content: '· '; color: var(--accent); }
 
-    /* ── Timeline (활동 이력) ── */
-    #activity { background: var(--light); }
-    .timeline { position: relative; padding-left: 32px; }
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 28px; }
     .timeline::before {
-      content: ''; position: absolute; left: 11px; top: 0; bottom: 0;
-      width: 2px; background: var(--primary); opacity: .2;
+      content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+      width: 2px; background: #e8e8e8;
     }
-    .tl-item { position: relative; margin-bottom: 36px; }
+    .tl-item { position: relative; margin-bottom: 22px; }
+    .tl-item:last-child { margin-bottom: 0; }
     .tl-dot {
-      position: absolute; left: -32px; top: 4px;
-      width: 22px; height: 22px; border-radius: 50%;
-      background: var(--primary); border: 3px solid #fff;
-      box-shadow: 0 0 0 2px var(--primary);
+      position: absolute; left: -28px; top: 4px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--accent); border: 3px solid var(--dark);
     }
-    .tl-year { font-size: .8rem; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
-    .tl-title { font-size: 1rem; font-weight: 700; color: var(--primary); }
-    .tl-desc { font-size: .9rem; color: var(--muted); margin-top: 4px; }
+    .tl-year {
+      font-size: .72rem; font-weight: 800; color: var(--accent);
+      background: var(--dark); display: inline-block;
+      padding: 1px 7px; border-radius: 4px; margin-bottom: 4px;
+    }
+    .tl-title { font-size: .95rem; font-weight: 700; color: var(--dark); }
+    .tl-desc { font-size: .83rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 
-    /* ── Gallery ── */
+    /* ── Gallery grid ── */
     .gallery-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: 200px; gap: 12px;
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 6px; border-radius: 10px; overflow: hidden;
     }
     .gallery-item {
-      border-radius: var(--radius); overflow: hidden;
-      background: var(--light); position: relative; cursor: pointer;
+      aspect-ratio: 1; overflow: hidden; cursor: pointer; background: #eee;
     }
-    .gallery-item:first-child { grid-column: span 2; grid-row: span 2; }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; transition: transform .3s; }
     .gallery-item:hover img { transform: scale(1.06); }
     .gallery-placeholder {
-      width: 100%; height: 100%;
-      background: linear-gradient(135deg, #e8edf3, #d0d8e4);
-      display: flex; align-items: center; justify-content: center;
-      font-size: .8rem; color: #999; flex-direction: column; gap: 6px;
+      width:100%; height:100%;
+      background: linear-gradient(135deg,#e8edf3,#d0d8e4);
+      display:flex; align-items:center; justify-content:center;
+      font-size:.75rem; color:#aaa; flex-direction:column; gap:4px;
     }
 
-    /* ── Contact ── */
-    #contact { background: var(--primary); color: #fff; }
-    #contact .section-title { color: #fff; }
-    #contact .section-subtitle { color: rgba(255,255,255,.7); }
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; }
-    .contact-info { display: flex; flex-direction: column; gap: 20px; }
-    .contact-item { display: flex; gap: 16px; align-items: flex-start; }
-    .contact-icon {
-      width: 44px; height: 44px; background: rgba(255,255,255,.1);
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem; flex-shrink: 0;
+    /* ── Support form ── */
+    .support-form { display: flex; flex-direction: column; gap: 10px; }
+    .support-form input, .support-form textarea {
+      background: var(--light); border: 1.5px solid #e8e8e8;
+      color: var(--text); padding: 13px 15px; border-radius: 12px;
+      font-size: .93rem; outline: none; font-family: inherit;
+      transition: border-color .2s; letter-spacing: -0.03em;
     }
-    .contact-text strong { display: block; font-size: .85rem; opacity: .7; margin-bottom: 2px; }
-    .contact-text span { font-size: 1rem; font-weight: 600; }
-    .contact-form { display: flex; flex-direction: column; gap: 14px; }
-    .contact-form input, .contact-form textarea {
-      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
-      color: #fff; padding: 14px 16px; border-radius: var(--radius);
-      font-size: .95rem; outline: none; font-family: inherit;
-      transition: border-color .2s;
+    .support-form input:focus, .support-form textarea:focus {
+      border-color: var(--accent);
     }
-    .contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(255,255,255,.4); }
-    .contact-form input:focus, .contact-form textarea:focus { border-color: rgba(255,255,255,.6); }
-    .contact-form textarea { resize: vertical; min-height: 120px; }
-    .contact-form button {
-      background: var(--accent); color: #1a1a2e; border: none;
-      padding: 14px; border-radius: var(--radius);
-      font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity .2s;
+    .support-form textarea { resize: vertical; min-height: 90px; }
+    .support-form button {
+      background: var(--accent); color: var(--dark); border: none;
+      padding: 15px; border-radius: 12px;
+      font-size: 1rem; font-weight: 800; cursor: pointer;
+      font-family: inherit; transition: opacity .2s; letter-spacing: -0.03em;
     }
-    .contact-form button:hover { opacity: .85; }
+    .support-form button:hover { opacity: .85; }
 
-    /* ── SNS 팔로우 ── */
-    .sns-bar {
-      display: flex; gap: 14px; margin-top: 28px; flex-wrap: wrap;
+    /* ── Contact info ── */
+    .contact-list { display: flex; flex-direction: column; gap: 10px; }
+    .contact-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 10px 14px; background: var(--light); border-radius: 10px;
     }
-    .sns-btn {
-      display: flex; align-items: center; gap: 8px;
-      padding: 10px 20px; border-radius: 24px; font-size: .9rem; font-weight: 600;
-      transition: opacity .2s;
+    .contact-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .contact-text strong { display: block; font-size: .72rem; color: var(--muted); margin-bottom: 1px; }
+    .contact-text span { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+    /* ── SNS buttons ── */
+    .sns-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+    .sns-link {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 15px 20px; border-radius: var(--radius);
+      font-size: .95rem; font-weight: 700;
+      transition: opacity .2s, transform .15s;
     }
-    .sns-btn:hover { opacity: .8; }
-    .sns-kakao { background: #fee500; color: #3c1e1e; }
-    .sns-insta { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
-    .sns-youtube { background: #ff0000; color: #fff; }
-    .sns-naver { background: #03c75a; color: #fff; }
+    .sns-link:hover { opacity: .88; transform: translateY(-1px); }
+    .sns-link .sns-ico { font-size: 1.2rem; }
+    .sns-kakao  { background: #FEE500; color: #3c1e1e; }
+    .sns-insta  { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); color: #fff; }
+    .sns-youtube{ background: #FF0000; color: #fff; }
+    .sns-naver  { background: #03C75A; color: #fff; }
+
+    /* ── Section label (divider style) ── */
+    .section-label {
+      text-align: center; font-size: .75rem; font-weight: 700;
+      color: rgba(255,255,255,.35); letter-spacing: .08em;
+      text-transform: uppercase; margin: 20px 0 10px;
+    }
 
     /* ── Footer ── */
-    footer {
-      background: #111; color: rgba(255,255,255,.5);
-      padding: 32px 0; text-align: center; font-size: .85rem; line-height: 1.8;
+    .page-footer {
+      text-align: center; color: rgba(255,255,255,.3);
+      font-size: .75rem; line-height: 1.9; padding: 12px 0 0;
     }
-    footer strong { color: rgba(255,255,255,.85); }
+    .page-footer strong { color: rgba(255,255,255,.55); }
+
+    /* ── CTA 대형 버튼 ── */
+    .cta-btn {
+      display: block; width: 100%;
+      background: var(--accent); color: var(--dark);
+      padding: 16px; border-radius: var(--radius);
+      font-size: 1.05rem; font-weight: 800; text-align: center;
+      margin-bottom: 12px; transition: opacity .2s, transform .15s;
+      box-shadow: 0 4px 20px rgba(255,212,0,.3);
+    }
+    .cta-btn:hover { opacity: .88; transform: translateY(-2px); }
+
+    /* ── Profile action buttons (share / bell) ── */
+    .profile-actions {
+      position: absolute; top: 12px; left: 0; right: 0;
+      display: flex; justify-content: space-between; padding: 0 14px;
+      pointer-events: none;
+    }
+    .profile-action-btn {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,.15);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,.22);
+      cursor: pointer; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: auto; transition: background .2s;
+    }
+    .profile-action-btn:hover { background: rgba(255,255,255,.26); }
+    .profile-action-btn svg { width: 17px; height: 17px; }
+
 
     /* ── Lightbox ── */
     #lightbox {
       display: none; position: fixed; inset: 0; z-index: 9999;
-      background: rgba(0,0,0,.85); align-items: center; justify-content: center;
+      background: rgba(0,0,0,.9); align-items: center; justify-content: center;
     }
     #lightbox.open { display: flex; }
-    #lightbox img { max-width: 90vw; max-height: 90vh; border-radius: var(--radius); }
+    #lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 12px; }
     #lightbox-close {
-      position: fixed; top: 20px; right: 24px; color: #fff;
+      position: fixed; top: 18px; right: 20px; color: #fff;
       font-size: 2rem; cursor: pointer; line-height: 1;
     }
 
     /* ── Toast ── */
     #toast {
-      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: #222; color: #fff; padding: 12px 28px; border-radius: 32px;
-      font-size: .9rem; opacity: 0; pointer-events: none; transition: all .35s;
-      z-index: 9000;
+      position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(16px);
+      background: var(--dark); color: #fff; padding: 11px 26px; border-radius: 28px;
+      font-size: .88rem; opacity: 0; pointer-events: none; transition: all .32s;
+      z-index: 9000; white-space: nowrap;
     }
     #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-    /* ── Back to top ── */
-    #btt {
-      position: fixed; bottom: 28px; right: 24px;
-      width: 46px; height: 46px; border-radius: 50%;
-      background: var(--primary); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem; cursor: pointer; opacity: 0; pointer-events: none;
-      transition: opacity .3s; z-index: 800; box-shadow: 0 4px 14px rgba(0,0,0,.25);
-    }
-    #btt.visible { opacity: 1; pointer-events: auto; }
-
-    /* ── Responsive ── */
-    @media (max-width: 900px) {
-      .hero-inner { grid-template-columns: 1fr; text-align: center; }
-      .hero-photo-wrap { display: none; }
-      .hero-slogan { border-left: none; border-top: 4px solid var(--accent); padding: 16px 0 0; }
-      .hero-btns { justify-content: center; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .profile-grid, .contact-grid { grid-template-columns: 1fr; }
-      .pledges-grid { grid-template-columns: 1fr 1fr; }
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .gallery-item:first-child { grid-column: span 1; grid-row: span 1; }
-      .gnb-nav, .gnb-cta { display: none; }
-      .gnb-hamburger { display: flex; }
-    }
-    @media (max-width: 600px) {
-      .hero-name { font-size: 2.6rem; }
-      .pledges-grid { grid-template-columns: 1fr; }
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 140px; }
-      .section { padding: 60px 0; }
-      .section-title { font-size: 1.6rem; }
-    }
-
-    /* ── Mobile menu ── */
-    #mobile-menu {
-      display: none; position: fixed; inset: 0; z-index: 850;
-      background: rgba(255,255,255,.98); flex-direction: column;
-      align-items: center; justify-content: center; gap: 36px;
-    }
-    #mobile-menu.open { display: flex; }
-    #mobile-menu a { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
-    #mobile-menu-close {
-      position: absolute; top: 20px; right: 24px;
-      font-size: 2rem; cursor: pointer; color: var(--text);
-    }
   </style>
 </head>
 <body>
 
-  <!-- GNB -->
-  <nav id="gnb">
-    <div class="container gnb-inner">
-      <a class="gnb-logo" href="#hero"><span class="gnb-name">황<em>경산</em></span><img class="gnb-party-logo" src="justice_logo.svg" alt="정의당" /></a>
-      <ul class="gnb-nav">
-        <li><a href="#profile">후보 소개</a></li>
-        <li><a href="#pledges">공약</a></li>
-        <li><a href="#activity">활동 이력</a></li>
-        <li><a href="#gallery">현장 사진</a></li>
-        <li><a href="#contact">연락처</a></li>
-      </ul>
-      <a class="gnb-cta" href="#contact">지지 선언</a>
-      <div class="gnb-hamburger" id="hamburger" aria-label="메뉴 열기">
-        <span></span><span></span><span></span>
+  <!-- ── Floating pill (fixed, shown on scroll) ── -->
+  <div id="float-icons">
+    <div id="float-pill">
+      <button class="float-btn" id="share-btn" aria-label="페이지 공유">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+        </svg>
+      </button>
+      <div class="float-center">
+        <img class="float-photo" src="hwang.jpg" alt="황경산" />
+        <span class="float-name">황<em>경산</em></span>
       </div>
+      <button class="float-btn" id="notify-btn" aria-label="지지 선언">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+      </button>
     </div>
-  </nav>
-
-  <!-- Mobile menu -->
-  <div id="mobile-menu" role="dialog" aria-modal="true">
-    <span id="mobile-menu-close" aria-label="메뉴 닫기">✕</span>
-    <a href="#profile" class="menu-link">후보 소개</a>
-    <a href="#pledges" class="menu-link">공약</a>
-    <a href="#activity" class="menu-link">활동 이력</a>
-    <a href="#gallery" class="menu-link">현장 사진</a>
-    <a href="#contact" class="menu-link">연락처</a>
-    <a class="btn-primary" href="#contact" style="color:#1a1a2e;">지지 선언하기</a>
   </div>
 
-  <!-- Hero -->
-  <section id="hero">
-    <div class="container">
-      <div class="hero-inner">
-        <div class="hero-text">
-          <span class="hero-tag"><img src="justice_logo.svg" alt="정의당" style="height:16px;width:auto;vertical-align:middle;margin-right:6px;" />서대문구의원 마선거구 (남가좌동·북가좌동)</span>
-          <h1 class="hero-name">황<em>경산</em></h1>
-          <p class="hero-role">서대문구의회 의원 후보 (정의당)</p>
-          <p class="hero-slogan">
-            "가좌동 주민과 함께,<br>더 공정하고 살기 좋은 동네를 만들겠습니다."
-          </p>
-          <div class="hero-btns">
-            <a class="btn-primary" href="#pledges">공약 보기</a>
-            <a class="btn-outline" href="#contact">지지 선언하기</a>
+  <div class="page">
+
+    <!-- ── Profile header ── -->
+    <header class="profile-header" style="position:relative;">
+      <!-- 항상 표시되는 공유/알림 버튼 -->
+      <div class="profile-actions">
+        <button class="profile-action-btn" id="share-btn2" aria-label="페이지 공유">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+          </svg>
+        </button>
+        <button class="profile-action-btn" id="notify-btn2" aria-label="지지 선언">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+      </div>
+      <div class="party-logo-wrap">
+        <img src="justice_logo_wh.svg" alt="정의당" />
+      </div>
+      <div class="profile-photo-wrap">
+        <img class="profile-photo" src="hwang.jpg" alt="황경산 후보" />
+      </div>
+      <h1 class="profile-name">황<em>경산</em></h1>
+      <p class="profile-role">서대문구의회 의원 후보</p>
+      <div class="profile-district">
+        📍 마선거구 · 남가좌동 · 북가좌동
+      </div>
+      <p class="profile-slogan">
+        황경산은 서대문 주민과 함께<br><strong style="color:var(--accent);">내란세력 청산</strong>하겠습니다!
+      </p>
+    </header>
+
+    <div class="page-content">
+
+    <!-- ── Stats ── -->
+    <div class="stats-row">
+      <div>
+        <div class="stat-num" data-target="15">0</div>
+        <div class="stat-label">지역활동<br>경력(년)</div>
+      </div>
+      <div>
+        <div class="stat-num" data-target="320">0</div>
+        <div class="stat-label">민원<br>해결건수</div>
+      </div>
+      <div>
+        <div class="stat-num" data-target="6">0</div>
+        <div class="stat-label">핵심<br>공약수</div>
+      </div>
+      <div>
+        <div class="stat-num" data-target="1200">0</div>
+        <div class="stat-label">지지선언<br>인원</div>
+      </div>
+    </div>
+
+    <!-- ── CTA ── -->
+    <a class="cta-btn" href="#support">✊ 지지 선언하기</a>
+
+    <!-- ── 후보 소개 ── -->
+    <div class="card">
+      <button class="acc-trigger" aria-expanded="true" data-target="acc-profile">
+        <span class="acc-left"><span class="acc-icon">🙋</span>후보 소개</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body open" id="acc-profile">
+        <p class="profile-bio">
+          저는 남가좌동·북가좌동 주민들과 함께 걸어왔습니다.<br><br>
+          재개발·교통·복지 문제를 두고 가장 약한 목소리가 묵살되는 것을
+          숱하게 목격했습니다. 화려한 공약보다 <strong>주민의 편에 서는 의원</strong>이 되겠습니다.<br><br>
+          정의당의 가치인 <strong>노동·복지·환경·평등</strong>을 가좌동 골목에서 실현하겠습니다.
+        </p>
+        <ul class="profile-list">
+          <li>
+            <span class="badge badge-accent">정당</span>
+            <span class="detail">정의당 서대문구 마선거구 후보</span>
+          </li>
+          <li>
+            <span class="badge">학력</span>
+            <span class="detail">OO대학교 OO학과 졸업</span>
+          </li>
+          <li>
+            <span class="badge">경력</span>
+            <span class="detail">정의당 서대문구위원회 활동 (20XX~현재)</span>
+          </li>
+          <li>
+            <span class="badge">경력</span>
+            <span class="detail">남가좌동·북가좌동 주민자치 활동 (20XX~현재)</span>
+          </li>
+          <li>
+            <span class="badge">봉사</span>
+            <span class="detail">서대문구 지역사회 돌봄 네트워크 (20XX~현재)</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ── 무지개 가좌 플랜 ── -->
+    <div class="card">
+      <button class="acc-trigger" aria-expanded="true" data-target="acc-pledge">
+        <span class="acc-left"><span class="acc-icon">🌈</span>무지개 가좌 플랜</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body open" id="acc-pledge">
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">01</div>
+            <span class="pledge-icon-sm">🏠</span>
+            <div class="pledge-title">1인가구 행복 가좌</div>
           </div>
-        </div>
-        <div class="hero-photo-wrap">
-          <img class="hero-photo" src="hwang.jpg" alt="황경산 서대문구의원 후보" />
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Stats Bar -->
-  <section id="stats">
-    <div class="container">
-      <div class="stats-grid">
-        <div>
-          <div class="stat-num" data-target="15">0</div>
-          <div class="stat-label">지역 활동 경력 (년)</div>
-        </div>
-        <div>
-          <div class="stat-num" data-target="320">0</div>
-          <div class="stat-label">주민 민원 해결 건수</div>
-        </div>
-        <div>
-          <div class="stat-num" data-target="7">0</div>
-          <div class="stat-label">핵심 공약 수</div>
-        </div>
-        <div>
-          <div class="stat-num" data-target="1200">0</div>
-          <div class="stat-label">지지 선언 인원</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Profile -->
-  <section id="profile" class="section">
-    <div class="container">
-      <h2 class="section-title">후보 소개</h2>
-      <p class="section-subtitle">남가좌동·북가좌동을 위해 살아온 우리 이웃, 황경산입니다.</p>
-      <div class="profile-grid">
-        <div class="profile-info">
-          <h3>주요 이력</h3>
-          <ul class="profile-list">
-            <li>
-              <span class="badge">정당</span>
-              <span class="detail">정의당 서대문구 마선거구 후보</span>
-            </li>
-            <li>
-              <span class="badge">학력</span>
-              <span class="detail">OO대학교 OO학과 졸업</span>
-            </li>
-            <li>
-              <span class="badge">경력</span>
-              <span class="detail">정의당 서대문구위원회 활동 (20XX~현재)</span>
-            </li>
-            <li>
-              <span class="badge">경력</span>
-              <span class="detail">남가좌동·북가좌동 주민자치 활동 (20XX~현재)</span>
-            </li>
-            <li>
-              <span class="badge">봉사</span>
-              <span class="detail">서대문구 지역사회 돌봄 네트워크 활동 (20XX~현재)</span>
-            </li>
+          <ul class="pledge-sub">
+            <li>1인가구 원스탑지원센터</li>
+            <li>1인가구 무상 청소·심리상담</li>
           </ul>
         </div>
-        <div>
-          <h3 style="font-size:1.4rem;font-weight:800;color:var(--primary);margin-bottom:20px;">후보자 한마디</h3>
-          <p class="profile-bio">
-            저는 남가좌동·북가좌동 주민들과 함께 걸어왔습니다.<br><br>
-            재개발·교통·복지 문제를 두고 가장 약한 목소리가 묵살되는 것을 
-            숱하게 목격했습니다. 화려한 공약보다 <strong>주민의 편에 서는 의원</strong>이 
-            되겠습니다.<br><br>
-            정의당의 가치인 <strong>노동·복지·환경·평등</strong>을 가좌동 골목에서 
-            실현하겠습니다. 구의원 한 명이 바꿀 수 있는 것들을 끝까지 해내겠습니다.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pledges -->
-  <section id="pledges" class="section" style="background:#fff;">
-    <div class="container">
-      <h2 class="section-title">7대 핵심 공약</h2>
-      <p class="section-subtitle">남가좌동·북가좌동을 위한 실현 가능한 약속입니다.</p>
-      <div class="pledges-grid">
-        <div class="pledge-card">
-          <div class="pledge-num">01</div>
-          <div class="pledge-icon">🏘️</div>
-          <div class="pledge-title">재개발·재건축 주민 권리 보호</div>
-          <p class="pledge-desc">가좌동 개발 과정에서 세입자와 원주민이 내몰리지 않도록 막겠습니다.</p>
-          <ul class="pledge-items">
-            <li>세입자 이주대책 조례 제정 추진</li>
-            <li>정비사업 주민 설명회 의무화</li>
-            <li>공공임대주택 비율 확대 요구</li>
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">02</div>
+            <span class="pledge-icon-sm">🤝</span>
+            <div class="pledge-title">함께 돌봄 가좌</div>
+          </div>
+          <ul class="pledge-sub">
+            <li>구립 심야어린이병원 설치</li>
+            <li>가좌 공공돌봄센터 설치</li>
           </ul>
         </div>
-        <div class="pledge-card">
-          <div class="pledge-num">02</div>
-          <div class="pledge-icon">🧒</div>
-          <div class="pledge-title">아이 키우기 좋은 동네</div>
-          <p class="pledge-desc">공보육 확대와 안전한 통학 환경으로 양육 부담을 줄이겠습니다.</p>
-          <ul class="pledge-items">
-            <li>국공립 어린이집 신규 설치 건의</li>
-            <li>남가좌·북가좌 초등학교 통학로 정비</li>
-            <li>방과후 돌봄 공백 해소 프로그램</li>
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">03</div>
+            <span class="pledge-icon-sm">🌿</span>
+            <div class="pledge-title">생태 공존 가좌</div>
+          </div>
+          <ul class="pledge-sub">
+            <li>5산2천 막개발 중단, 재자연화</li>
+            <li>서대문 탄소중립지원센터 설치</li>
           </ul>
         </div>
-        <div class="pledge-card">
-          <div class="pledge-num">03</div>
-          <div class="pledge-icon">👩‍🦳</div>
-          <div class="pledge-title">어르신·장애인 복지 강화</div>
-          <p class="pledge-desc">누구도 소외되지 않는 돌봄 안전망을 구축하겠습니다.</p>
-          <ul class="pledge-items">
-            <li>경로당 냉·난방 시설 전면 개선</li>
-            <li>독거노인 안심 돌봄 순회 서비스</li>
-            <li>장애인 이동 편의시설 전수 점검</li>
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">04</div>
+            <span class="pledge-icon-sm">🚌</span>
+            <div class="pledge-title">15분 교통 가좌</div>
+          </div>
+          <ul class="pledge-sub">
+            <li>마을버스 공영제 무상교통</li>
+            <li>지하철 서부선 공공 신속 추진</li>
           </ul>
         </div>
-        <div class="pledge-card">
-          <div class="pledge-num">04</div>
-          <div class="pledge-icon">🚌</div>
-          <div class="pledge-title">교통·주차 문제 해소</div>
-          <p class="pledge-desc">가좌동의 만성 주차난과 불편한 대중교통을 개선하겠습니다.</p>
-          <ul class="pledge-items">
-            <li>공영주차장 부지 발굴 및 확보</li>
-            <li>마을버스 배차 간격 단축 건의</li>
-            <li>이면도로 불법주정차 단속 강화</li>
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">05</div>
+            <span class="pledge-icon-sm">⚧️</span>
+            <div class="pledge-title">성평등 가좌</div>
+          </div>
+          <ul class="pledge-sub">
+            <li>디지털성폭력 원샷지원센터 설치</li>
+            <li>여성노동공제회로 4대보험 지원</li>
           </ul>
         </div>
-        <div class="pledge-card">
-          <div class="pledge-num">05</div>
-          <div class="pledge-icon">🌿</div>
-          <div class="pledge-title">환경·기후 대응</div>
-          <p class="pledge-desc">탄소중립 시대에 걸맞은 친환경 생활 인프라를 만들겠습니다.</p>
-          <ul class="pledge-items">
-            <li>가좌동 녹지·공원 확충</li>
-            <li>분리수거 시설 개선 및 음식물 처리 지원</li>
-            <li>친환경 공공 자전거 거치대 확대</li>
-          </ul>
-        </div>
-        <div class="pledge-card">
-          <div class="pledge-num">06</div>
-          <div class="pledge-icon">💼</div>
-          <div class="pledge-title">노동·소상공인 권리 보호</div>
-          <p class="pledge-desc">일하는 주민이 제대로 대접받는 동네를 만들겠습니다.</p>
-          <ul class="pledge-items">
-            <li>감정노동자 보호 조례 이행 감시</li>
-            <li>골목상권 임대료 안정 대책 촉구</li>
-            <li>지역 자활·사회적경제 조직 지원</li>
-          </ul>
-        </div>
-        <div class="pledge-card">
-          <div class="pledge-num">07</div>
-          <div class="pledge-icon">📣</div>
-          <div class="pledge-title">주민 참여 열린 의정</div>
-          <p class="pledge-desc">주민이 직접 결정하는 투명한 구의회 활동을 약속합니다.</p>
-          <ul class="pledge-items">
-            <li>매월 주민 간담회 정례 개최</li>
-            <li>의정 활동 전 과정 SNS 공개</li>
-            <li>청원·민원 7일 이내 답변 원칙</li>
+        <div class="pledge-item">
+          <div class="pledge-header">
+            <div class="pledge-num-badge">06</div>
+            <span class="pledge-icon-sm">🤲</span>
+            <div class="pledge-title">함께 인권 가좌</div>
+          </div>
+          <ul class="pledge-sub">
+            <li>서대문 차별금지 조례 제정</li>
+            <li>장애인 맞춤 공공일자리 확대</li>
           </ul>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Activity Timeline -->
-  <section id="activity" class="section">
-    <div class="container">
-      <h2 class="section-title">활동 이력</h2>
-      <p class="section-subtitle">말이 아닌 발로 뛴 현장의 기록입니다.</p>
-      <div style="max-width:600px; margin:0 auto;">
-        <div class="timeline" id="timeline">
+    <!-- ── 활동 이력 ── -->
+    <div class="card">
+      <button class="acc-trigger" aria-expanded="false" data-target="acc-activity">
+        <span class="acc-left"><span class="acc-icon">📅</span>활동 이력</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body" id="acc-activity">
+        <div class="timeline">
           <div class="tl-item">
             <div class="tl-dot"></div>
             <div class="tl-year">20XX</div>
@@ -580,89 +613,109 @@
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Gallery -->
-  <section id="gallery" class="section" style="background:#fff;">
-    <div class="container">
-      <h2 class="section-title">현장 사진</h2>
-      <p class="section-subtitle">주민 여러분과 함께한 순간들입니다.</p>
-      <div class="gallery-grid" id="gallery-grid">
-        <!-- 사진은 JS로 렌더링되거나 직접 <img src="..."> 로 교체하세요 -->
-        <div class="gallery-item"><div class="gallery-placeholder">📷 사진 1</div></div>
-        <div class="gallery-item"><div class="gallery-placeholder">📷 사진 2</div></div>
-        <div class="gallery-item"><div class="gallery-placeholder">📷 사진 3</div></div>
-        <div class="gallery-item"><div class="gallery-placeholder">📷 사진 4</div></div>
-        <div class="gallery-item"><div class="gallery-placeholder">📷 사진 5</div></div>
+    <!-- ── 현장 사진 ── -->
+    <div class="card">
+      <button class="acc-trigger" aria-expanded="false" data-target="acc-gallery">
+        <span class="acc-left"><span class="acc-icon">📷</span>현장 사진</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body" id="acc-gallery">
+        <div class="gallery-grid" id="gallery-grid">
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 1</div></div>
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 2</div></div>
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 3</div></div>
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 4</div></div>
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 5</div></div>
+          <div class="gallery-item"><div class="gallery-placeholder">📷<br>사진 6</div></div>
+        </div>
       </div>
     </div>
-  </section>
 
-  <!-- Contact -->
-  <section id="contact" class="section">
-    <div class="container">
-      <h2 class="section-title">연락처 &amp; 지지 선언</h2>
-      <p class="section-subtitle">함께해주세요. 여러분의 한 표가 동네를 바꿉니다.</p>
-      <div class="contact-grid">
-        <div>
-          <div class="contact-info">
-            <div class="contact-item">
-              <div class="contact-icon">📍</div>
-              <div class="contact-text">
-                <strong>선거사무소</strong>
-                <span>서울시 서대문구 가좌로 XXX (XX빌딩 1층)</span>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-icon">📞</div>
-              <div class="contact-text">
-                <strong>전화</strong>
-                <span>02-XXXX-XXXX</span>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-icon">✉️</div>
-              <div class="contact-text">
-                <strong>이메일</strong>
-                <span>candidate@example.com</span>
-              </div>
-            </div>
-            <div class="contact-item">
-              <div class="contact-icon">🕐</div>
-              <div class="contact-text">
-                <strong>운영시간</strong>
-                <span>평일 09:00 – 21:00 / 주말 10:00 – 18:00</span>
-              </div>
-            </div>
-          </div>
-          <div class="sns-bar">
-            <a class="sns-btn sns-kakao" href="#" target="_blank">💬 카카오</a>
-            <a class="sns-btn sns-insta" href="#" target="_blank">📸 인스타그램</a>
-            <a class="sns-btn sns-youtube" href="#" target="_blank">▶ 유튜브</a>
-            <a class="sns-btn sns-naver" href="#" target="_blank">N 블로그</a>
-          </div>
-        </div>
-        <form class="contact-form" id="support-form" novalidate>
+    <!-- ── 지지 선언 ── -->
+    <div class="card" id="support">
+      <button class="acc-trigger" aria-expanded="true" data-target="acc-support">
+        <span class="acc-left"><span class="acc-icon">✊</span>지지 선언하기</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body open" id="acc-support">
+        <form class="support-form" id="support-form" novalidate>
           <input type="text" name="name" placeholder="성함" required />
           <input type="tel" name="phone" placeholder="연락처 (예: 010-1234-5678)" required />
           <input type="text" name="dong" placeholder="거주 동 (남가좌동 / 북가좌동)" />
           <textarea name="message" placeholder="응원 메시지 (선택)"></textarea>
-          <button type="submit">지지 선언하기 →</button>
+          <button type="submit">황경산 후보를 지지합니다 →</button>
         </form>
       </div>
     </div>
-  </section>
 
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <p><strong>황경산 후보 선거사무소 | 정의당 서대문구 마선거구</strong></p>
-      <p>서울시 서대문구 가좌로 XXX | 전화: 02-XXXX-XXXX</p>
-      <p style="margin-top:8px;font-size:.8rem;">
-        본 웹사이트는 공직선거법 제82조의4에 따른 인터넷 선거운동용으로 제작되었습니다.
-      </p>
+    <!-- ── 연락처 ── -->
+    <div class="card">
+      <button class="acc-trigger" aria-expanded="false" data-target="acc-contact">
+        <span class="acc-left"><span class="acc-icon">📞</span>연락처 · 선거사무소</span>
+        <span class="acc-arrow">▼</span>
+      </button>
+      <div class="acc-body" id="acc-contact">
+        <div class="contact-list">
+          <div class="contact-item">
+            <span class="contact-icon">📍</span>
+            <div class="contact-text">
+              <strong>선거사무소</strong>
+              <span>서울시 서대문구 가좌로 XXX (XX빌딩 1층)</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">📞</span>
+            <div class="contact-text">
+              <strong>전화</strong>
+              <span>02-XXXX-XXXX</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">✉️</span>
+            <div class="contact-text">
+              <strong>이메일</strong>
+              <span>candidate@example.com</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <span class="contact-icon">🕐</span>
+            <div class="contact-text">
+              <strong>운영시간</strong>
+              <span>평일 09:00–21:00 / 주말 10:00–18:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </footer>
+
+    <!-- ── SNS ── -->
+    <div class="section-label">SNS · 채널</div>
+    <div class="sns-list">
+      <a class="sns-link sns-kakao" href="#" target="_blank">
+        <span class="sns-ico">💬</span>카카오톡 채널
+      </a>
+      <a class="sns-link sns-insta" href="#" target="_blank">
+        <span class="sns-ico">📸</span>인스타그램
+      </a>
+      <a class="sns-link sns-youtube" href="#" target="_blank">
+        <span class="sns-ico">▶</span>유튜브 채널
+      </a>
+      <a class="sns-link sns-naver" href="#" target="_blank">
+        <span class="sns-ico">N</span>네이버 블로그
+      </a>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer class="page-footer">
+      <p><strong>황경산 후보 선거사무소 | 정의당 서대문구 마선거구</strong></p>
+      <p>서울시 서대문구 가좌로 XXX | 02-XXXX-XXXX</p>
+      <p style="margin-top:6px;">본 웹사이트는 공직선거법 제82조의4에 따른<br>인터넷 선거운동용으로 제작되었습니다.</p>
+    </footer>
+
+    </div><!-- /page-content -->
+
+  </div><!-- /page -->
 
   <!-- Lightbox -->
   <div id="lightbox" role="dialog" aria-modal="true">
@@ -673,108 +726,109 @@
   <!-- Toast -->
   <div id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Back to top -->
-  <button id="btt" aria-label="맨 위로">↑</button>
-
   <script>
-    /* ── GNB scroll shadow ── */
-    const gnb = document.getElementById('gnb');
-    window.addEventListener('scroll', () => {
-      gnb.classList.toggle('scrolled', window.scrollY > 40);
-      document.getElementById('btt').classList.toggle('visible', window.scrollY > 400);
-    }, { passive: true });
-
-    /* ── Mobile menu ── */
-    const mobileMenu = document.getElementById('mobile-menu');
-    document.getElementById('hamburger').addEventListener('click', () => mobileMenu.classList.add('open'));
-    document.getElementById('mobile-menu-close').addEventListener('click', () => mobileMenu.classList.remove('open'));
-    document.querySelectorAll('.menu-link').forEach(link => {
-      link.addEventListener('click', () => mobileMenu.classList.remove('open'));
+    /* ── Accordion ── */
+    document.querySelectorAll('.acc-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.target;
+        const body = document.getElementById(id);
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', !isOpen);
+        body.classList.toggle('open', !isOpen);
+      });
     });
 
-    /* ── Back to top ── */
-    document.getElementById('btt').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    /* ── CountUp animation ── */
+    /* ── CountUp ── */
     function countUp(el) {
       const target = parseInt(el.dataset.target, 10);
-      const duration = 1800;
-      const step = Math.ceil(target / (duration / 16));
-      let current = 0;
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = current.toLocaleString('ko-KR');
-        if (current >= target) clearInterval(timer);
-      }, 16);
+      const step = Math.ceil(target / 80);
+      let cur = 0;
+      const t = setInterval(() => {
+        cur = Math.min(cur + step, target);
+        el.textContent = cur.toLocaleString('ko-KR');
+        if (cur >= target) clearInterval(t);
+      }, 18);
     }
-
-    const statsObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.querySelectorAll('[data-target]').forEach(countUp);
-          statsObserver.unobserve(entry.target);
+    const statsObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.querySelectorAll('[data-target]').forEach(countUp);
+          statsObs.unobserve(e.target);
         }
       });
     }, { threshold: 0.5 });
-    statsObserver.observe(document.getElementById('stats'));
+    statsObs.observe(document.querySelector('.stats-row'));
 
     /* ── Gallery lightbox ── */
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
-
     document.getElementById('gallery-grid').addEventListener('click', e => {
       const img = e.target.closest('.gallery-item')?.querySelector('img');
       if (!img) return;
       lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
       lightbox.classList.add('open');
       document.body.style.overflow = 'hidden';
     });
-    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-    function closeLightbox() {
-      lightbox.classList.remove('open');
-      document.body.style.overflow = '';
-    }
+    document.getElementById('lightbox-close').addEventListener('click', closeLB);
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLB(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+    function closeLB() { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
 
     /* ── Toast ── */
-    function showToast(msg, duration = 3000) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), duration);
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 3000);
     }
 
     /* ── Support form ── */
     document.getElementById('support-form').addEventListener('submit', e => {
       e.preventDefault();
-      const form = e.target;
-      const name = form.name.value.trim();
-      const phone = form.phone.value.trim();
-      if (!name || !phone) {
-        showToast('성함과 연락처를 입력해주세요.');
-        return;
+      const f = e.target;
+      if (!f.name.value.trim() || !f.phone.value.trim()) {
+        showToast('성함과 연락처를 입력해주세요.'); return;
       }
-      // TODO: fetch('/api/support', { method: 'POST', body: new FormData(form) })
-      showToast(`${name}님, 지지 선언 감사합니다! 🙏`);
-      form.reset();
+      showToast(`${f.name.value.trim()}님, 지지 선언 감사합니다! 🙏`);
+      f.reset();
     });
 
-    /* ── Scroll reveal (Intersection Observer) ── */
-    const revealObserver = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
-          revealObserver.unobserve(entry.target);
+    /* ── Float icons show/hide on scroll ── */
+    const floatIcons = document.getElementById('float-icons');
+    const profileHeader = document.querySelector('.profile-header');
+    const headerObs = new IntersectionObserver(entries => {
+      entries.forEach(e => floatIcons.classList.toggle('visible', !e.isIntersecting));
+    }, { threshold: 0 });
+    headerObs.observe(profileHeader);
+
+    function doShare() {
+      if (navigator.share) {
+        navigator.share({ title: '황경산 | 정의당 서대문구의원 후보', url: location.href });
+      } else {
+        navigator.clipboard?.writeText(location.href);
+        showToast('링크가 복사됐습니다.');
+      }
+    }
+    function doSupport() {
+      document.getElementById('support').scrollIntoView({ behavior: 'smooth' });
+    }
+    document.getElementById('share-btn').addEventListener('click', doShare);
+    document.getElementById('share-btn2').addEventListener('click', doShare);
+    document.getElementById('notify-btn').addEventListener('click', doSupport);
+    document.getElementById('notify-btn2').addEventListener('click', doSupport);
+
+    /* ── Scroll reveal ── */
+    const revObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+          revObs.unobserve(e.target);
         }
       });
-    }, { threshold: 0.12 });
-
-    document.querySelectorAll('.pledge-card, .tl-item, .contact-item').forEach(el => {
-      el.style.cssText += 'opacity:0; transform:translateY(24px); transition: opacity .5s ease, transform .5s ease;';
-      revealObserver.observe(el);
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.card, .stats-row, .cta-btn, .sns-link').forEach(el => {
+      el.style.cssText += 'opacity:0;transform:translateY(20px);transition:opacity .45s ease,transform .45s ease;';
+      revObs.observe(el);
     });
   </script>
 </body>
