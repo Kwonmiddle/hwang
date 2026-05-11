@@ -62,7 +62,22 @@
       padding: 40px 24px 48px;
       background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
     }
-    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 16px; }
+    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 8px; }
+    /* 홈 · 수달 스프라이트 (1750×300, 프레임 350×300 ×5) — 표시 40px 너비 */
+    .home-otter {
+      width: 40px;
+      aspect-ratio: 350 / 300;
+      margin: 4px 0 8px;
+      overflow: hidden;
+    }
+    .home-otter-sprite {
+      width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      image-rendering: pixelated;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: crisp-edges;
+    }
     .home-slide h2 {
       font-family: 'Paperlogy', 'Pretendard', sans-serif;
       font-size: 1.65rem; font-weight: 900; color: var(--dark);
@@ -385,6 +400,9 @@
         <section class="slide-panel" id="slide-0" aria-label="홈">
           <div class="slide-panel-inner home-slide">
             <img class="home-logo" src="justice_logo.svg" alt="정의당" />
+            <div class="home-otter" id="home-otter" role="img" aria-label="수달 캐릭터">
+              <div class="home-otter-sprite" id="home-otter-sprite"></div>
+            </div>
             <h2>황경산<br>서대문구의원 후보</h2>
             <p>마선거구(남가좌동·북가좌동)<br>정의당과 함께 무지개 가좌로 갑니다.</p>
             <button type="button" class="home-cta" data-go-slide="1">후보 소개 보기 →</button>
@@ -724,6 +742,81 @@
       el.style.cssText += 'opacity:0;transform:translateY(20px);transition:opacity .45s ease,transform .45s ease;';
       revObs.observe(el);
     });
+
+    /* ── 홈 수달 스프라이트 (char.png) ── */
+    (function () {
+      const wrap = document.getElementById('home-otter');
+      const sprite = document.getElementById('home-otter-sprite');
+      if (!wrap || !sprite) return;
+
+      const FRAME_COUNT = 5;
+      const FRAME_MS = 140;
+      let tick = 0;
+      let rafId = null;
+      let last = 0;
+      let acc = 0;
+
+      function onHomeSlide() {
+        const s = document.body.dataset.slide;
+        return !s || s === '0';
+      }
+
+      function pingPong(t, n) {
+        const cycle = n * 2 - 2;
+        if (cycle <= 0) return 0;
+        const i = t % cycle;
+        return i < n ? i : cycle - i;
+      }
+
+      function applyBg() {
+        const w = sprite.offsetWidth;
+        const h = sprite.offsetHeight;
+        if (w < 1) return;
+        sprite.style.backgroundImage = "url('char.png')";
+        sprite.style.backgroundSize = w * FRAME_COUNT + 'px ' + h + 'px';
+        const f = pingPong(tick, FRAME_COUNT);
+        sprite.style.backgroundPosition = -f * w + 'px 0';
+      }
+
+      function step(now) {
+        if (!last) last = now;
+        const dt = now - last;
+        last = now;
+        if (onHomeSlide()) {
+          acc += dt;
+          if (acc >= FRAME_MS) {
+            acc -= FRAME_MS;
+            tick += 1;
+            applyBg();
+          }
+        }
+        rafId = requestAnimationFrame(step);
+      }
+
+      wrap.addEventListener('pointerdown', function () {
+        tick += 1;
+        applyBg();
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') {
+          if (rafId) cancelAnimationFrame(rafId);
+          rafId = null;
+          last = 0;
+        } else if (!rafId) {
+          last = 0;
+          rafId = requestAnimationFrame(step);
+        }
+      });
+
+      new ResizeObserver(function () {
+        applyBg();
+        syncSlideViewportHeight();
+      }).observe(wrap);
+
+      applyBg();
+      rafId = requestAnimationFrame(step);
+    })();
   </script>
 </body>
 </html>
