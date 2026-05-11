@@ -26,59 +26,103 @@
       min-height: 100vh;
       background: var(--dark);
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 20px 12px 80px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 36px 12px 120px;
     }
 
-    /* ── Floating pill (scroll-triggered, fixed) ── */
-    #float-icons {
-      position: fixed;
-      top: 36px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-12px);
-      z-index: 500;
-      opacity: 0; pointer-events: none;
-      transition: opacity .28s ease, transform .28s ease;
+    /* ── 슬라이드 (프레임 안) ── */
+    .slide-viewport {
+      overflow: hidden;
+      width: 100%;
+      transition: height 0.5s cubic-bezier(0.25, 0.85, 0.35, 1);
     }
-    #float-icons.visible {
-      opacity: 1; pointer-events: auto;
-      transform: translateX(-50%) translateY(0);
+    .slide-track {
+      display: flex;
+      align-items: flex-start;
+      width: 400%;
+      transition: transform 0.55s cubic-bezier(0.25, 0.85, 0.35, 1);
+      will-change: transform;
     }
-    #float-pill {
-      display: flex; align-items: center; justify-content: space-between;
-      gap: 10px;
-      width: min(370px, calc(100vw - 48px));
-      background: rgba(255,255,255,.72);
-      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,.55);
-      border-radius: 40px;
-      padding: 8px 12px;
-      box-shadow: 0 6px 24px rgba(0,0,0,.16);
+    .slide-panel {
+      flex: 0 0 25%;
+      width: 25%;
+      min-height: 0;
     }
-    .float-btn {
-      width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(26,26,46,.08); border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background .2s; flex-shrink: 0;
+    .slide-panel-inner {
+      width: 100%;
     }
-    .float-btn:hover { background: rgba(26,26,46,.15); }
-    .float-btn svg { width: 17px; height: 17px; }
-    .float-photo {
-      width: 38px; height: 38px; border-radius: 50%;
-      object-fit: cover; flex-shrink: 0;
-      border: 2px solid var(--accent);
-      box-shadow: 0 0 0 2px rgba(26,26,46,.12);
+    .home-slide {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px 48px;
+      background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
     }
-    .float-center {
-      display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center;
-    }
-    .float-name {
+    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 16px; }
+    .home-slide h2 {
       font-family: 'Paperlogy', 'Pretendard', sans-serif;
-      font-size: 1.5rem; font-weight: 900; color: var(--dark);
-      white-space: nowrap; line-height: 1;
+      font-size: 1.65rem; font-weight: 900; color: var(--dark);
+      margin-bottom: 8px;
     }
-    .float-name em { color: var(--accent); font-style: normal; }
+    .home-slide p { color: var(--muted); font-size: .92rem; margin-bottom: 22px; line-height: 1.6; }
+    .home-cta {
+      display: inline-block;
+      background: var(--accent); color: var(--dark);
+      font-weight: 800; padding: 14px 26px; border-radius: 999px;
+      font-size: .95rem;
+      box-shadow: 0 6px 20px rgba(255,212,0,.35);
+    }
+    .home-cta:hover { opacity: .92; }
+
+    .placeholder-slide {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: var(--light);
+      color: var(--muted);
+    }
+    .placeholder-slide strong { color: var(--dark); font-size: 1.1rem; margin-bottom: 8px; }
+
+    /* ── 하단 도킹 메뉴 (프레임 바깥) ── */
+    .dock-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 22px;
+      z-index: 600;
+      display: flex;
+      gap: 18px;
+      padding: 10px 16px;
+      background: rgba(255,255,255,.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+    }
+    .dock-btn {
+      width: 52px; height: 52px; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.92);
+      color: var(--dark);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform .2s, box-shadow .2s, border-color .2s, background .2s;
+      box-shadow: 0 4px 14px rgba(0,0,0,.12);
+    }
+    .dock-btn:hover { transform: translateY(-3px); }
+    .dock-btn[aria-current="true"] {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255,212,0,.35), 0 6px 18px rgba(0,0,0,.18);
+      background: #fff;
+    }
+    .dock-btn svg { width: 22px; height: 22px; }
+
     h1, h2, h3, h4, .stat-num, .pledge-title, .tl-title {
       font-family: 'Paperlogy', 'Pretendard', sans-serif;
     }
@@ -335,27 +379,19 @@
 </head>
 <body>
 
-  <!-- ── Floating pill (fixed, shown on scroll) ── -->
-  <div id="float-icons">
-    <div id="float-pill">
-      <button class="float-btn" id="share-btn" aria-label="페이지 공유">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
-        </svg>
-      </button>
-      <div class="float-center">
-        <img class="float-photo" src="hwang.jpg" alt="황경산" />
-        <span class="float-name">황<em>경산</em></span>
-      </div>
-      <button class="float-btn" id="notify-btn" aria-label="지지 선언">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
   <div class="page">
+    <div class="slide-viewport" aria-live="polite">
+      <div class="slide-track" id="slide-track">
+        <section class="slide-panel" id="slide-0" aria-label="홈">
+          <div class="slide-panel-inner home-slide">
+            <img class="home-logo" src="justice_logo.svg" alt="정의당" />
+            <h2>황경산<br>서대문구의원 후보</h2>
+            <p>마선거구(남가좌동·북가좌동)<br>정의당과 함께 무지개 가좌로 갑니다.</p>
+            <button type="button" class="home-cta" data-go-slide="1">후보 소개 보기 →</button>
+          </div>
+        </section>
+        <section class="slide-panel" id="slide-1" aria-label="후보 소개">
+        <div class="slide-panel-inner">
 
     <!-- ── Profile header ── -->
     <header class="profile-header" style="position:relative;">
@@ -539,7 +575,39 @@
 
     </div><!-- /page-content -->
 
+        </div><!-- /slide-panel-inner -->
+        </section><!-- slide-1 -->
+
+        <section class="slide-panel" id="slide-2" aria-label="공약 한눈에">
+          <div class="slide-panel-inner placeholder-slide">
+            <strong>공약 한눈에</strong>
+            <span>준비 중입니다.</span>
+          </div>
+        </section>
+        <section class="slide-panel" id="slide-3" aria-label="더보기">
+          <div class="slide-panel-inner placeholder-slide">
+            <strong>더보기</strong>
+            <span>준비 중입니다.</span>
+          </div>
+        </section>
+      </div><!-- /slide-track -->
+    </div><!-- /slide-viewport -->
   </div><!-- /page -->
+
+  <nav class="dock-nav" id="dock-nav" aria-label="페이지 메뉴">
+    <button type="button" class="dock-btn" data-slide="0" aria-label="홈" aria-current="true" title="홈">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </button>
+    <button type="button" class="dock-btn" data-slide="1" aria-label="후보 소개" title="후보 소개">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    </button>
+    <button type="button" class="dock-btn" data-slide="2" aria-label="공약 한눈에" title="공약 한눈에">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </button>
+    <button type="button" class="dock-btn" data-slide="3" aria-label="더보기" title="더보기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </button>
+  </nav>
 
   <!-- Lightbox -->
   <div id="lightbox" role="dialog" aria-modal="true">
@@ -584,13 +652,46 @@
 
     // (약력 파트 삭제로 토글 스크립트 제거됨)
 
-    /* ── Float icons show/hide on scroll ── */
-    const floatIcons = document.getElementById('float-icons');
-    const profileHeader = document.querySelector('.profile-header');
-    const headerObs = new IntersectionObserver(entries => {
-      entries.forEach(e => floatIcons.classList.toggle('visible', !e.isIntersecting));
-    }, { threshold: 0 });
-    headerObs.observe(profileHeader);
+    /* ── Slide navigation ── */
+    const slideTrack = document.getElementById('slide-track');
+    const slideViewport = document.querySelector('.slide-viewport');
+    const slidePanels = document.querySelectorAll('.slide-panel');
+    let currentSlide = 0;
+
+    function syncSlideViewportHeight() {
+      const p = slidePanels[currentSlide];
+      if (!slideViewport || !p) return;
+      slideViewport.style.height = `${p.offsetHeight}px`;
+    }
+
+    function setSlide(idx) {
+      currentSlide = Math.max(0, Math.min(3, idx));
+      slideTrack.style.transform = `translateX(-${currentSlide * 25}%)`;
+      document.querySelectorAll('.dock-btn').forEach((b, i) => {
+        b.setAttribute('aria-current', i === currentSlide ? 'true' : 'false');
+      });
+      document.body.dataset.slide = String(currentSlide);
+      const tail = currentSlide === 1 ? '#intro' : '';
+      history.replaceState(null, '', location.pathname + location.search + tail);
+      syncSlideViewportHeight();
+      requestAnimationFrame(() => syncSlideViewportHeight());
+    }
+
+    document.getElementById('dock-nav').addEventListener('click', e => {
+      const btn = e.target.closest('.dock-btn');
+      if (!btn) return;
+      setSlide(parseInt(btn.dataset.slide, 10));
+    });
+    document.querySelectorAll('[data-go-slide]').forEach(el => {
+      el.addEventListener('click', () => setSlide(parseInt(el.dataset.goSlide, 10)));
+    });
+    if (location.hash === '#intro') setSlide(1);
+    else syncSlideViewportHeight();
+
+    const slideResizeObs = new ResizeObserver(() => syncSlideViewportHeight());
+    slidePanels.forEach(p => slideResizeObs.observe(p));
+    window.addEventListener('resize', syncSlideViewportHeight);
+    if (document.fonts?.ready) document.fonts.ready.then(() => syncSlideViewportHeight());
 
     function doShare() {
       if (navigator.share) {
@@ -601,11 +702,12 @@
       }
     }
     function doSupport() {
-      document.getElementById('support').scrollIntoView({ behavior: 'smooth' });
+      setSlide(1);
+      setTimeout(() => {
+        document.getElementById('support')?.scrollIntoView({ behavior: 'smooth' });
+      }, 420);
     }
-    document.getElementById('share-btn').addEventListener('click', doShare);
     document.getElementById('share-btn2').addEventListener('click', doShare);
-    document.getElementById('notify-btn').addEventListener('click', doSupport);
     document.getElementById('notify-btn2').addEventListener('click', doSupport);
 
     /* ── Scroll reveal ── */
