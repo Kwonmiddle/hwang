@@ -20,11 +20,9 @@ type OtterCharacterProps = {
   frameIntervalMs?: number;
 };
 
-function pingPongFrame(tick: number, frameCount: number): number {
-  const cycle = frameCount * 2 - 2;
-  if (cycle <= 0) return 0;
-  const i = tick % cycle;
-  return i < frameCount ? i : cycle - i;
+/** 노출 프레임만 1→2→3→2 (0-index 0,1,2,1) 반복 */
+function idleOtterFrameIndex(tick: number): number {
+  return [0, 1, 2, 1][tick % 4]!;
 }
 
 export function OtterCharacter({
@@ -32,7 +30,7 @@ export function OtterCharacter({
   autoPlay = true,
   frameIntervalMs = 140,
 }: OtterCharacterProps) {
-  const { src, frameWidth, frameHeight, sheetWidth, sheetHeight, frameCount } =
+  const { src, frameWidth, frameHeight, sheetWidth, sheetHeight } =
     OTTER_SPRITE;
 
   const [tick, setTick] = useState(0);
@@ -40,7 +38,7 @@ export function OtterCharacter({
   const lastRef = useRef<number>(0);
   const accRef = useRef(0);
 
-  const frameIndex = pingPongFrame(tick, frameCount);
+  const frameIndex = idleOtterFrameIndex(tick);
   const bgX = -frameIndex * frameWidth;
 
   const step = useCallback((now: number) => {

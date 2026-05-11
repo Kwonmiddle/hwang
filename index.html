@@ -62,13 +62,66 @@
       padding: 40px 24px 48px;
       background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
     }
-    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 8px; }
-    /* 홈 · 수달 스프라이트 (1750×300, 프레임 350×300 ×5) — 표시 40px 너비 */
+    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 10px; }
+    .home-slide .home-lead {
+      color: var(--muted);
+      font-size: .9rem;
+      margin-bottom: 14px;
+      line-height: 1.6;
+      max-width: 22rem;
+    }
+    /* 홈 · 4열 통계 + 수달 동작1 (스프라이트 1750×300, 프레임 350×300 ×5) */
+    .home-stats-board {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px 4px;
+      width: 100%;
+      max-width: 100%;
+      margin: 16px 0 22px;
+      text-align: center;
+    }
+    .home-stat-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+    }
+    .home-stat-num {
+      font-family: 'Paperlogy', 'Pretendard', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+    }
+    .home-stat-label {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.38;
+      word-break: keep-all;
+    }
+    .home-stat-btn {
+      width: 100%;
+      max-width: 76px;
+      padding: 7px 4px;
+      border: none;
+      border-radius: 10px;
+      background: var(--dark);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: -0.05em;
+    }
+    .home-stat-btn:hover { opacity: 0.9; }
+    .home-stat-btn:active { transform: scale(0.97); }
     .home-otter {
-      width: 40px;
+      width: 34px;
       aspect-ratio: 350 / 300;
-      margin: 4px 0 8px;
       overflow: hidden;
+      flex-shrink: 0;
     }
     .home-otter-sprite {
       width: 100%;
@@ -78,12 +131,27 @@
       image-rendering: -moz-crisp-edges;
       image-rendering: crisp-edges;
     }
+    .home-stat-fish-stack {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: 0;
+      row-gap: 1px;
+      padding-top: 2px;
+      min-height: 4px;
+      justify-items: center;
+      align-content: start;
+    }
+    .home-stat-fish-seg {
+      font-size: 0.68rem;
+      line-height: 1;
+      opacity: 0.92;
+    }
     .home-slide h2 {
       font-family: 'Paperlogy', 'Pretendard', sans-serif;
       font-size: 1.65rem; font-weight: 900; color: var(--dark);
       margin-bottom: 8px;
     }
-    .home-slide p { color: var(--muted); font-size: .92rem; margin-bottom: 22px; line-height: 1.6; }
     .home-cta {
       display: inline-block;
       background: var(--accent); color: var(--dark);
@@ -400,11 +468,46 @@
         <section class="slide-panel" id="slide-0" aria-label="홈">
           <div class="slide-panel-inner home-slide">
             <img class="home-logo" src="justice_logo.svg" alt="정의당" />
-            <div class="home-otter" id="home-otter" role="img" aria-label="수달 캐릭터">
-              <div class="home-otter-sprite" id="home-otter-sprite"></div>
-            </div>
             <h2>황경산<br>서대문구의원 후보</h2>
-            <p>마선거구(남가좌동·북가좌동)<br>정의당과 함께 무지개 가좌로 갑니다.</p>
+            <p class="home-lead">마선거구(남가좌동·북가좌동)<br>정의당과 함께 무지개 가좌로 갑니다.</p>
+            <div class="home-stats-board" id="home-stats-board">
+              <div class="home-stat-col" data-col="0">
+                <div class="home-stat-num" id="home-stat-n0">0</div>
+                <div class="home-stat-label">내란세력없는<br>서대문 만들기</div>
+                <button type="button" class="home-stat-btn" data-stat-col="0" aria-label="내란세력없는 서대문 만들기 서명">서명</button>
+                <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
+                  <div class="home-otter-sprite"></div>
+                </div>
+                <div class="home-stat-fish-stack" id="home-fish-0"></div>
+              </div>
+              <div class="home-stat-col" data-col="1">
+                <div class="home-stat-num" id="home-stat-n1">0</div>
+                <div class="home-stat-label">서부선<br>공공 신속 추진</div>
+                <button type="button" class="home-stat-btn" data-stat-col="1" aria-label="서부선 공공 신속 추진 서명">서명</button>
+                <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
+                  <div class="home-otter-sprite"></div>
+                </div>
+                <div class="home-stat-fish-stack" id="home-fish-1"></div>
+              </div>
+              <div class="home-stat-col" data-col="2">
+                <div class="home-stat-num" id="home-stat-n2">0</div>
+                <div class="home-stat-label">1인가구 동별<br>지원센터 설치</div>
+                <button type="button" class="home-stat-btn" data-stat-col="2" aria-label="1인가구 동별 지원센터 설치 서명">서명</button>
+                <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
+                  <div class="home-otter-sprite"></div>
+                </div>
+                <div class="home-stat-fish-stack" id="home-fish-2"></div>
+              </div>
+              <div class="home-stat-col" data-col="3">
+                <div class="home-stat-num" id="home-stat-n3">0</div>
+                <div class="home-stat-label">백련산 끈끈이<br>롤트랩 반대</div>
+                <button type="button" class="home-stat-btn" data-stat-col="3" aria-label="백련산 끈끈이 롤트랩 반대 서명">서명</button>
+                <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
+                  <div class="home-otter-sprite"></div>
+                </div>
+                <div class="home-stat-fish-stack" id="home-fish-3"></div>
+              </div>
+            </div>
             <button type="button" class="home-cta" data-go-slide="1">후보 소개 보기 →</button>
           </div>
         </section>
@@ -743,59 +846,86 @@
       revObs.observe(el);
     });
 
-    /* ── 홈 수달 스프라이트 (char.png) ── */
+    /* ── 홈 통계 보드 + 수달 동작1 ×4 (char.png) ──
+     *  [동작 1] 스프라이트만. 1-based 1→2→3→2… (0-index [0,1,2,1], 4틱). 네 열 수달 모두 동작1.
+     *  [동작 2] (보류) 0-index [1,3,1,4] 4틱 — 다른 화면·시트 연동 시 사용.
+     *  [동작 3] (보류) 7틱 점프+5/2 프레임 — 다른 화면에서 사용.
+     */
     (function () {
-      const wrap = document.getElementById('home-otter');
-      const sprite = document.getElementById('home-otter-sprite');
-      if (!wrap || !sprite) return;
+      const board = document.getElementById('home-stats-board');
+      if (!board) return;
+      const sprites = board.querySelectorAll('.home-otter-sprite');
+      if (sprites.length < 4) return;
 
-      const FRAME_COUNT = 5;
+      const SHEET_FRAMES = 5;
       const FRAME_MS = 140;
+      const counts = [0, 0, 0, 0];
       let tick = 0;
       let rafId = null;
       let last = 0;
       let acc = 0;
+
+      function motion1FrameAtTick(t) {
+        return [0, 1, 2, 1][t % 4];
+      }
 
       function onHomeSlide() {
         const s = document.body.dataset.slide;
         return !s || s === '0';
       }
 
-      function pingPong(t, n) {
-        const cycle = n * 2 - 2;
-        if (cycle <= 0) return 0;
-        const i = t % cycle;
-        return i < n ? i : cycle - i;
-      }
-
-      function applyBg() {
-        const w = sprite.offsetWidth;
-        const h = sprite.offsetHeight;
-        if (w < 1) return;
-        sprite.style.backgroundImage = "url('char.png')";
-        sprite.style.backgroundSize = w * FRAME_COUNT + 'px ' + h + 'px';
-        const f = pingPong(tick, FRAME_COUNT);
-        sprite.style.backgroundPosition = -f * w + 'px 0';
+      function applyOtters() {
+        for (var i = 0; i < sprites.length; i++) {
+          var sprite = sprites[i];
+          var w = sprite.offsetWidth;
+          var h = sprite.offsetHeight;
+          if (w < 1) continue;
+          sprite.style.backgroundImage = "url('char.png')";
+          sprite.style.backgroundSize = w * SHEET_FRAMES + 'px ' + h + 'px';
+          var f = motion1FrameAtTick(tick);
+          sprite.style.backgroundPosition = -f * w + 'px 0';
+        }
       }
 
       function step(now) {
         if (!last) last = now;
-        const dt = now - last;
+        var dt = now - last;
         last = now;
         if (onHomeSlide()) {
           acc += dt;
           if (acc >= FRAME_MS) {
             acc -= FRAME_MS;
             tick += 1;
-            applyBg();
+            applyOtters();
           }
         }
         rafId = requestAnimationFrame(step);
       }
 
-      wrap.addEventListener('pointerdown', function () {
-        tick += 1;
-        applyBg();
+      board.querySelectorAll('.home-stat-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var col = parseInt(btn.getAttribute('data-stat-col'), 10);
+          if (isNaN(col) || col < 0 || col > 3) return;
+          counts[col] += 1;
+          var numEl = document.getElementById('home-stat-n' + col);
+          if (numEl) numEl.textContent = String(counts[col]);
+          var stack = document.getElementById('home-fish-' + col);
+          if (stack) {
+            var seg = document.createElement('span');
+            seg.className = 'home-stat-fish-seg';
+            seg.textContent = '🐟';
+            seg.setAttribute('aria-hidden', 'true');
+            stack.appendChild(seg);
+          }
+          syncSlideViewportHeight();
+        });
+      });
+
+      board.querySelectorAll('.home-otter').forEach(function (wrap) {
+        wrap.addEventListener('pointerdown', function () {
+          tick += 1;
+          applyOtters();
+        });
       });
 
       document.addEventListener('visibilitychange', function () {
@@ -810,11 +940,11 @@
       });
 
       new ResizeObserver(function () {
-        applyBg();
+        applyOtters();
         syncSlideViewportHeight();
-      }).observe(wrap);
+      }).observe(board);
 
-      applyBg();
+      applyOtters();
       rafId = requestAnimationFrame(step);
     })();
   </script>
