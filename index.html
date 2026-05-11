@@ -62,7 +62,37 @@
       padding: 40px 24px 48px;
       background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
     }
-    .home-slide .home-logo { height: 32px; width: auto; margin-bottom: 10px; }
+    .home-cta-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      gap: 12px;
+      width: 100%;
+    }
+    .home-slide .home-logo {
+      height: 34px;
+      width: auto;
+      display: block;
+    }
+    .home-candidate-byline {
+      text-align: center;
+    }
+    .home-candidate-name {
+      font-family: 'Paperlogy', 'Pretendard', sans-serif;
+      font-size: 1.95rem;
+      font-weight: 900;
+      color: var(--dark);
+      letter-spacing: -0.04em;
+      line-height: 1.12;
+    }
+    .home-candidate-role {
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 5px;
+      letter-spacing: -0.03em;
+    }
     .home-slide .home-lead {
       color: var(--muted);
       font-size: .9rem;
@@ -77,7 +107,7 @@
       gap: 6px 4px;
       width: 100%;
       max-width: 100%;
-      margin: 16px 0 22px;
+      margin: 16px 0 18px;
       text-align: center;
     }
     .home-stat-col {
@@ -117,6 +147,15 @@
     }
     .home-stat-btn:hover { opacity: 0.9; }
     .home-stat-btn:active { transform: scale(0.97); }
+    /* 홈 통계 보드: 열별 컬러 (순서: 내란세력 → 1인가구 → 백련산 → 서부선) */
+    .home-stat-col[data-col="0"] .home-stat-num { color: #ed174c; }
+    .home-stat-col[data-col="0"] .home-stat-btn { background: #ed174c; }
+    .home-stat-col[data-col="1"] .home-stat-num { color: #f15623; }
+    .home-stat-col[data-col="1"] .home-stat-btn { background: #f15623; }
+    .home-stat-col[data-col="2"] .home-stat-num { color: #008c69; }
+    .home-stat-col[data-col="2"] .home-stat-btn { background: #008c69; }
+    .home-stat-col[data-col="3"] .home-stat-num { color: #009ee2; }
+    .home-stat-col[data-col="3"] .home-stat-btn { background: #009ee2; }
     .home-otter {
       width: 34px;
       aspect-ratio: 350 / 300;
@@ -131,6 +170,16 @@
       image-rendering: -moz-crisp-edges;
       image-rendering: crisp-edges;
     }
+    /* 홈 상단 · 동작3 수달(점프) */
+    .home-hero-otter {
+      width: 56px;
+      aspect-ratio: 350 / 300;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+      will-change: transform;
+    }
+    .otter-word { color: #a67c52; }
     .home-stat-fish-stack {
       width: 100%;
       display: grid;
@@ -467,9 +516,11 @@
       <div class="slide-track" id="slide-track">
         <section class="slide-panel" id="slide-0" aria-label="홈">
           <div class="slide-panel-inner home-slide">
-            <img class="home-logo" src="justice_logo.svg" alt="정의당" />
-            <h2>황경산<br>서대문구의원 후보</h2>
-            <p class="home-lead">마선거구(남가좌동·북가좌동)<br>정의당과 함께 무지개 가좌로 갑니다.</p>
+            <div class="home-hero-otter" id="home-hero-otter" role="img" aria-label="수달 동작3">
+              <div class="home-otter-sprite" id="home-hero-otter-sprite"></div>
+            </div>
+            <h2>서대문 <span class="otter-word">수달이</span>를 키워주세요!</h2>
+            <p class="home-lead">서대문에서 해결할 4가지 문제!<br>황경산 구의원 후보가 시민들과 함께 해결하겠습니다!</p>
             <div class="home-stats-board" id="home-stats-board">
               <div class="home-stat-col" data-col="0">
                 <div class="home-stat-num" id="home-stat-n0">0</div>
@@ -482,8 +533,8 @@
               </div>
               <div class="home-stat-col" data-col="1">
                 <div class="home-stat-num" id="home-stat-n1">0</div>
-                <div class="home-stat-label">서부선<br>공공 신속 추진</div>
-                <button type="button" class="home-stat-btn" data-stat-col="1" aria-label="서부선 공공 신속 추진 서명">서명</button>
+                <div class="home-stat-label">1인가구 동별<br>지원센터 설치</div>
+                <button type="button" class="home-stat-btn" data-stat-col="1" aria-label="1인가구 동별 지원센터 설치 서명">서명</button>
                 <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
                   <div class="home-otter-sprite"></div>
                 </div>
@@ -491,8 +542,8 @@
               </div>
               <div class="home-stat-col" data-col="2">
                 <div class="home-stat-num" id="home-stat-n2">0</div>
-                <div class="home-stat-label">1인가구 동별<br>지원센터 설치</div>
-                <button type="button" class="home-stat-btn" data-stat-col="2" aria-label="1인가구 동별 지원센터 설치 서명">서명</button>
+                <div class="home-stat-label">백련산 끈끈이<br>롤트랩 반대</div>
+                <button type="button" class="home-stat-btn" data-stat-col="2" aria-label="백련산 끈끈이 롤트랩 반대 서명">서명</button>
                 <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
                   <div class="home-otter-sprite"></div>
                 </div>
@@ -500,15 +551,22 @@
               </div>
               <div class="home-stat-col" data-col="3">
                 <div class="home-stat-num" id="home-stat-n3">0</div>
-                <div class="home-stat-label">백련산 끈끈이<br>롤트랩 반대</div>
-                <button type="button" class="home-stat-btn" data-stat-col="3" aria-label="백련산 끈끈이 롤트랩 반대 서명">서명</button>
+                <div class="home-stat-label">서부선<br>공공 신속 추진</div>
+                <button type="button" class="home-stat-btn" data-stat-col="3" aria-label="서부선 공공 신속 추진 서명">서명</button>
                 <div class="home-otter" data-motion="1" role="img" aria-label="수달 동작1">
                   <div class="home-otter-sprite"></div>
                 </div>
                 <div class="home-stat-fish-stack" id="home-fish-3"></div>
               </div>
             </div>
-            <button type="button" class="home-cta" data-go-slide="1">후보 소개 보기 →</button>
+            <div class="home-cta-stack">
+              <img class="home-logo" src="justice_logo.svg" alt="정의당" />
+              <div class="home-candidate-byline">
+                <div class="home-candidate-name">황경산</div>
+                <div class="home-candidate-role">서대문 구의원 후보<br>마선거구 · 남가좌동 · 북가좌동</div>
+              </div>
+              <button type="button" class="home-cta" data-go-slide="1">후보 소개 보기 →</button>
+            </div>
           </div>
         </section>
         <section class="slide-panel" id="slide-1" aria-label="후보 소개">
@@ -856,6 +914,8 @@
       if (!board) return;
       const sprites = board.querySelectorAll('.home-otter-sprite');
       if (sprites.length < 4) return;
+      const heroWrap = document.getElementById('home-hero-otter');
+      const heroSprite = document.getElementById('home-hero-otter-sprite');
 
       const SHEET_FRAMES = 5;
       const FRAME_MS = 140;
@@ -867,6 +927,18 @@
 
       function motion1FrameAtTick(t) {
         return [0, 1, 2, 1][t % 4];
+      }
+      function motion3FrameAtTick(t) {
+        // 7틱: 올라가는 5틱은 5번(인덱스4), 내려오는 2틱은 2번(인덱스1)
+        var p = t % 7;
+        return p < 5 ? 4 : 1;
+      }
+      function motion3JumpTranslateY(t) {
+        // 7틱: 0~4(상승) 0→-11px, 5~6(하강) -11→0
+        var p = t % 7;
+        var JUMP_Y = -11;
+        if (p < 5) return (JUMP_Y * p) / 4;
+        return JUMP_Y + (-JUMP_Y) * (p - 5);
       }
 
       function onHomeSlide() {
@@ -884,6 +956,17 @@
           sprite.style.backgroundSize = w * SHEET_FRAMES + 'px ' + h + 'px';
           var f = motion1FrameAtTick(tick);
           sprite.style.backgroundPosition = -f * w + 'px 0';
+        }
+        if (heroWrap && heroSprite) {
+          var hw = heroSprite.offsetWidth;
+          var hh = heroSprite.offsetHeight;
+          if (hw > 0) {
+            heroSprite.style.backgroundImage = "url('char.png')";
+            heroSprite.style.backgroundSize = hw * SHEET_FRAMES + 'px ' + hh + 'px';
+            var hf = motion3FrameAtTick(tick);
+            heroSprite.style.backgroundPosition = -hf * hw + 'px 0';
+            heroWrap.style.transform = 'translateY(' + motion3JumpTranslateY(tick) + 'px)';
+          }
         }
       }
 
