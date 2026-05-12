@@ -26,14 +26,16 @@ function scaleFromCount(count: number) {
   return 1 + Math.floor(count / 100) * 0.1;
 }
 
-/** 막대 100%가 되는 기준(건). 넘치면 가득 찬 상태로 유지 — 숫자는 위쪽이 정확한 값. */
+/** 막대 100% 기준(건). 숫자는 위쪽이 정확한 값. */
 const FISH_METER_MAX = 800;
+
+/** 탱크 안에 그릴 물고기 최대 개수(DOM 부담·영역 초과분은 +n). */
+const FISH_STACK_CAP = 160;
 
 function fishMeterPercent(raw: number) {
   if (raw <= 0) return 0;
   const linear = (raw / FISH_METER_MAX) * 100;
-  // 아주 적을 때도 살짝 보이게
-  const boosted = Math.max(8, linear);
+  const boosted = Math.max(6, linear);
   return Math.min(100, boosted);
 }
 
@@ -78,11 +80,11 @@ function SignatureCol({
         <OtterSprite motion={1} width={34} scale={scaleFromCount(raw)} ariaLabel="수달 동작1" />
       </div>
       <div
-        className="mt-1.5 w-full max-w-[76px]"
+        className="mt-2 w-full max-w-[92px]"
         aria-hidden
-        title={`서명 ${raw.toLocaleString("ko-KR")}건 (막대는 대략적인 비율)`}
+        title={`서명 ${raw.toLocaleString("ko-KR")}건`}
       >
-        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-900/10">
+        <div className="mb-1.5 h-3.5 w-full overflow-hidden rounded-full bg-slate-900/10 shadow-inner">
           <div
             className="h-full max-w-full rounded-full transition-[width] duration-700 ease-out"
             style={{
@@ -91,8 +93,17 @@ function SignatureCol({
             }}
           />
         </div>
-        <div className="mt-0.5 text-center text-[0.6rem] leading-none opacity-60">
-          🐟
+        <div className="relative flex h-[112px] w-full flex-wrap content-end items-end justify-center gap-px overflow-hidden rounded-xl border border-slate-900/10 bg-gradient-to-b from-slate-50 to-slate-100/90 px-0.5 pb-0.5 shadow-inner">
+          {raw > FISH_STACK_CAP ? (
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-white from-40% to-transparent px-0.5 pb-3 pt-1 text-center text-[0.65rem] font-bold leading-tight text-slate-600">
+              +{(raw - FISH_STACK_CAP).toLocaleString("ko-KR")}
+            </div>
+          ) : null}
+          {Array.from({ length: Math.min(raw, FISH_STACK_CAP) }).map((_, i) => (
+            <span key={i} className="select-none text-[10px] leading-[1.05]">
+              🐟
+            </span>
+          ))}
         </div>
       </div>
     </div>
