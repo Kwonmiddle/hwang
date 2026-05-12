@@ -77,7 +77,12 @@ function SignatureCol({
   );
 }
 
-export function SignatureBoard() {
+type SignatureBoardProps = {
+  /** 홈 슬라이드 안에 넣을 때 여백·배경만 줄임 */
+  embedded?: boolean;
+};
+
+export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
   const { data } = useSWR<ApiResponse>("/api/signatures", fetcher, {
     refreshInterval: 60_000,
     revalidateOnFocus: true,
@@ -88,7 +93,13 @@ export function SignatureBoard() {
   });
 
   return (
-    <section className="w-full max-w-[420px] px-6 pb-12 pt-10 text-slate-900">
+    <section
+      className={
+        embedded
+          ? "w-full max-w-[420px] px-4 pb-4 pt-6 text-slate-900"
+          : "w-full max-w-[420px] px-6 pb-12 pt-10 text-slate-900"
+      }
+    >
       <div className="mb-2 flex items-end justify-center">
         <OtterSprite motion={3} width={56} ariaLabel="수달 동작3" />
       </div>

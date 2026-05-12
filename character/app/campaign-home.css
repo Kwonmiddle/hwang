@@ -1,0 +1,538 @@
+  @font-face {
+    font-family: 'PfStardust30';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardust.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'PfStardust30';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustBold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'PfStardust30';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2506-1@1.0/PFStardustExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-display: swap;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --accent:   #FFD400;
+    --dark:     #1a1a2e;
+    --darker:   #0d0d1a;
+    --card:     #ffffff;
+    --light:    #f7f7f5;
+    --muted:    #888;
+    --text:     #1a1a2e;
+    --radius:   18px;
+    --col:      440px;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  .campaign-root {
+    font-family: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+    letter-spacing: -0.03em;
+    min-height: 100vh;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 36px 12px 120px;
+  }
+
+  /* ── 슬라이드 (프레임 안) ── */
+  .slide-viewport {
+    overflow: hidden;
+    width: 100%;
+    transition: height 0.5s cubic-bezier(0.25, 0.85, 0.35, 1);
+  }
+  .slide-track {
+    display: flex;
+    align-items: flex-start;
+    width: 400%;
+    transition: transform 0.55s cubic-bezier(0.25, 0.85, 0.35, 1);
+    will-change: transform;
+  }
+  .slide-panel {
+    flex: 0 0 25%;
+    width: 25%;
+    min-height: 0;
+  }
+  .slide-panel-inner {
+    width: 100%;
+  }
+  .home-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px 48px;
+    background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
+  }
+  .home-cta-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    gap: 12px;
+    width: 100%;
+  }
+  .home-slide .home-logo {
+    height: 34px;
+    width: auto;
+    display: block;
+  }
+  .home-candidate-byline {
+    text-align: center;
+  }
+  .home-candidate-name {
+    font-family: 'Paperlogy', 'Pretendard', sans-serif;
+    font-size: 1.95rem;
+    font-weight: 900;
+    color: var(--dark);
+    letter-spacing: -0.04em;
+    line-height: 1.12;
+  }
+  .home-candidate-role {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-top: 5px;
+    letter-spacing: -0.03em;
+  }
+  .home-slide .home-lead {
+    color: var(--muted);
+    font-size: .9rem;
+    margin-bottom: 14px;
+    line-height: 1.6;
+    max-width: 22rem;
+  }
+  /* 홈 · 4열 통계 + 수달 동작1 (스프라이트 1750×300, 프레임 350×300 ×5) */
+  .home-stats-board {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px 4px;
+    width: 100%;
+    max-width: 100%;
+    margin: 16px 0 18px;
+    text-align: center;
+  }
+  .home-stat-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+  }
+  .home-stat-num {
+    font-family: 'Paperlogy', 'Pretendard', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--dark);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+  .home-stat-label {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--muted);
+    line-height: 1.38;
+    word-break: keep-all;
+  }
+  .home-stat-btn {
+    width: 100%;
+    max-width: 76px;
+    padding: 7px 4px;
+    border: none;
+    border-radius: 10px;
+    background: var(--dark);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.05em;
+  }
+  .home-stat-btn:hover { opacity: 0.9; }
+  .home-stat-btn:active { transform: scale(0.97); }
+  /* 홈 통계 보드: 열별 컬러 (순서: 내란세력 → 1인가구 → 백련산 → 서부선) */
+  .home-stat-col[data-col="0"] .home-stat-num { color: #ed174c; }
+  .home-stat-col[data-col="0"] .home-stat-label { color: #ed174c; }
+  .home-stat-col[data-col="0"] .home-stat-btn { background: #ed174c; }
+  .home-stat-col[data-col="1"] .home-stat-num { color: #f15623; }
+  .home-stat-col[data-col="1"] .home-stat-label { color: #f15623; }
+  .home-stat-col[data-col="1"] .home-stat-btn { background: #f15623; }
+  .home-stat-col[data-col="2"] .home-stat-num { color: #008c69; }
+  .home-stat-col[data-col="2"] .home-stat-label { color: #008c69; }
+  .home-stat-col[data-col="2"] .home-stat-btn { background: #008c69; }
+  .home-stat-col[data-col="3"] .home-stat-num { color: #009ee2; }
+  .home-stat-col[data-col="3"] .home-stat-label { color: #009ee2; }
+  .home-stat-col[data-col="3"] .home-stat-btn { background: #009ee2; }
+  .home-otter {
+    width: 34px;
+    aspect-ratio: 350 / 300;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .home-otter-sprite {
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+  /* 홈 상단 · 동작3 수달(점프) */
+  .home-hero-otter {
+    width: 56px;
+    aspect-ratio: 350 / 300;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+    will-change: transform;
+  }
+  .otter-word { color: #a67c52; }
+  .home-stat-fish-stack {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 0;
+    row-gap: 1px;
+    padding-top: 2px;
+    min-height: 4px;
+    justify-items: center;
+    align-content: start;
+  }
+  .home-stat-fish-seg {
+    font-size: 0.68rem;
+    line-height: 1;
+    opacity: 0.92;
+  }
+  .home-slide h2 {
+    font-family: 'PfStardust30', 'Paperlogy', 'Pretendard', sans-serif;
+    font-size: 1.65rem; font-weight: 900; color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .home-cta {
+    display: inline-block;
+    background: var(--accent); color: var(--dark);
+    font-weight: 800; padding: 14px 26px; border-radius: 999px;
+    font-size: .95rem;
+    box-shadow: 0 6px 20px rgba(255,212,0,.35);
+  }
+  .home-cta:hover { opacity: .92; }
+
+  .placeholder-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background: var(--light);
+    color: var(--muted);
+  }
+  .placeholder-slide strong { color: var(--dark); font-size: 1.1rem; margin-bottom: 8px; }
+
+  /* ── 하단 도킹 메뉴 (프레임 바깥) ── */
+  .dock-nav {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 22px;
+    z-index: 600;
+    display: flex;
+    gap: 18px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.18);
+  }
+  .dock-btn {
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.35);
+    background: rgba(255,255,255,.92);
+    color: var(--dark);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s, box-shadow .2s, border-color .2s, background .2s;
+    box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  }
+  .dock-btn:hover { transform: translateY(-3px); }
+  .dock-btn[aria-current="true"] {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255,212,0,.35), 0 6px 18px rgba(0,0,0,.18);
+    background: #fff;
+  }
+  .dock-btn svg { width: 22px; height: 22px; }
+  .dock-otter {
+    width: 28px; height: 28px;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    background-repeat: no-repeat;
+  }
+
+  h1, h2, h3, h4, .stat-num, .pledge-title, .tl-title {
+    font-family: 'Paperlogy', 'Pretendard', sans-serif;
+  }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ── Page column (phone frame) ── */
+  .page {
+    width: 100%;
+    max-width: var(--col);
+    background: #fff;
+    border-radius: 40px;
+    border: 6px solid var(--dark);
+    box-shadow: 0 28px 80px rgba(0,0,0,.28);
+    overflow: hidden;
+  }
+
+  /* ── Padded inner content ── */
+  .page-content {
+    padding: 16px 16px 56px;
+  }
+
+  /* ── Profile header ── */
+  .profile-header {
+    text-align: left;
+    padding: 18px 20px 22px;
+    color: #fff;
+    background: #000;
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.06) 45%, rgba(0,0,0,.78) 100%),
+      url("/hwang.jpg");
+    background-size: cover;
+    background-position: center 22%;
+    min-height: 520px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .header-bottom {
+    width: 100%;
+    padding-top: 90px; /* 얼굴 영역 확보 */
+  }
+  .party-logo-wrap {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+  .party-logo-wrap img { height: 28px; width: auto; }
+  .profile-photo-wrap { display: none; }
+  .profile-photo { display: none; }
+  .profile-name {
+    font-size: 2.4rem; font-weight: 900; line-height: 1;
+    margin-bottom: 8px;
+    text-shadow: 0 8px 30px rgba(0,0,0,.55);
+  }
+  .profile-name em { color: var(--accent); font-style: normal; }
+  .profile-role {
+    font-size: .9rem; opacity: .7; margin-bottom: 6px; font-weight: 500;
+    text-shadow: 0 6px 20px rgba(0,0,0,.55);
+  }
+  .profile-district {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(0,0,0,.28); border: 1px solid rgba(255,212,0,.32);
+    color: var(--accent); padding: 4px 14px; border-radius: 20px;
+    font-size: .82rem; font-weight: 700; margin-bottom: 22px;
+  }
+  .profile-slogan {
+    font-size: 1.05rem; font-weight: 600; line-height: 1.7;
+    color: rgba(255,255,255,.85);
+    background: rgba(0,0,0,.22);
+    border-left: 3px solid var(--accent);
+    padding: 14px 18px;
+    border-radius: 0 12px 12px 0;
+    text-align: left;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card); border-radius: var(--radius);
+    margin-bottom: 12px; overflow: hidden;
+    box-shadow: 0 2px 16px rgba(0,0,0,.18);
+  }
+
+  /* ── Accordion ── */
+  .acc-trigger {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 22px; background: none; border: none; cursor: pointer;
+    font-family: inherit; font-size: 1rem; font-weight: 700;
+    color: var(--text); letter-spacing: -0.03em;
+  }
+  .acc-trigger .acc-left { display: flex; align-items: center; gap: 10px; }
+  .acc-trigger .acc-icon { font-size: 1.3rem; }
+  .acc-trigger .acc-arrow {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--light); display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; transition: transform .3s; flex-shrink: 0;
+  }
+  .acc-trigger[aria-expanded="true"] .acc-arrow { transform: rotate(180deg); }
+  .acc-body {
+    display: none; padding: 0 22px 20px;
+  }
+  .acc-body.open { display: block; }
+
+  /* ── Profile content ── */
+  .profile-bio {
+    font-size: .95rem; line-height: 1.85; color: #444;
+    border-bottom: 1px solid #f0f0f0; padding-bottom: 18px; margin-bottom: 18px;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+  .profile-bio-strong {
+    font-weight: 900;
+    color: #52318e;
+  }
+  /* (약력 파트 삭제로 관련 스타일 제거됨) */
+
+  /* ── Pledges ── */
+  .pledge-item {
+    padding: 14px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .pledge-item:last-child { border-bottom: none; }
+  .pledge-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .pledge-num-badge {
+    min-width: 28px; height: 28px; background: var(--dark); color: #fff;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 900; flex-shrink: 0;
+  }
+  .pledge-title { font-size: .98rem; font-weight: 800; color: var(--dark); }
+  .pledge-icon-sm { font-size: 1.1rem; }
+  .pledge-sub {
+    margin-left: 38px;
+    font-size: .83rem; color: var(--muted); line-height: 1.6;
+  }
+  .pledge-sub li { list-style: none; }
+  .pledge-sub li::before { content: '· '; color: var(--accent); }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 4px; bottom: 4px;
+    width: 2px; background: #e8e8e8;
+  }
+  .tl-item { position: relative; margin-bottom: 22px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-dot {
+    position: absolute; left: -28px; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent); border: 3px solid var(--dark);
+  }
+  .tl-year {
+    font-size: .72rem; font-weight: 800; color: var(--accent);
+    background: var(--dark); display: inline-block;
+    padding: 1px 7px; border-radius: 4px; margin-bottom: 4px;
+  }
+  .tl-title { font-size: .95rem; font-weight: 700; color: var(--dark); }
+  .tl-desc { font-size: .83rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+  /* ── Support form ── */
+  .support-form { display: flex; flex-direction: column; gap: 10px; }
+  .support-form input, .support-form textarea {
+    background: var(--light); border: 1.5px solid #e8e8e8;
+    color: var(--text); padding: 13px 15px; border-radius: 12px;
+    font-size: .93rem; outline: none; font-family: inherit;
+    transition: border-color .2s; letter-spacing: -0.03em;
+  }
+  .support-form input:focus, .support-form textarea:focus {
+    border-color: var(--accent);
+  }
+  .support-form textarea { resize: vertical; min-height: 90px; }
+  .support-form button {
+    background: var(--accent); color: var(--dark); border: none;
+    padding: 15px; border-radius: 12px;
+    font-size: 1rem; font-weight: 800; cursor: pointer;
+    font-family: inherit; transition: opacity .2s; letter-spacing: -0.03em;
+  }
+  .support-form button:hover { opacity: .85; }
+
+  /* ── Contact info ── */
+  .contact-list { display: flex; flex-direction: column; gap: 10px; }
+  .contact-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 14px; background: var(--light); border-radius: 10px;
+  }
+  .contact-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .contact-text strong { display: block; font-size: .72rem; color: var(--muted); margin-bottom: 1px; }
+  .contact-text span { font-size: .9rem; font-weight: 600; color: var(--text); }
+
+  /* ── SNS buttons ── */
+  /* ── SNS 아이콘 행 ── */
+  .sns-icon-row {
+    display: flex; justify-content: center; align-items: center;
+    gap: 14px; padding: 8px 0 4px; margin-bottom: 12px;
+  }
+  .sns-icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    color: #111;
+    transition: transform .18s ease, opacity .18s ease;
+    flex-shrink: 0;
+  }
+  .sns-icon-btn:hover { transform: translateY(-2px); opacity: .85; }
+  .sns-icon-btn svg, .sns-icon-btn img { width: 28px; height: 28px; }
+
+  /* ── Section label (divider style) ── */
+  .section-label {
+    text-align: center; font-size: .75rem; font-weight: 700;
+    color: rgba(255,255,255,.35); letter-spacing: .08em;
+    text-transform: uppercase; margin: 20px 0 10px;
+  }
+
+  /* ── Footer ── */
+  .page-footer {
+    text-align: center; color: rgba(26,26,46,.65);
+    font-size: .75rem; line-height: 1.9; padding: 12px 0 0;
+  }
+  .page-footer strong { color: rgba(26,26,46,.9); }
+
+  /* ── Profile action buttons (share / bell) ── */
+  .profile-actions {
+    position: absolute; top: 12px; left: 0; right: 0;
+    display: flex; justify-content: space-between; padding: 0 14px;
+    pointer-events: none;
+  }
+  .profile-action-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,.22);
+    cursor: pointer; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: auto; transition: background .2s;
+  }
+  .profile-action-btn:hover { background: rgba(255,255,255,.26); }
+  .profile-action-btn svg { width: 17px; height: 17px; }
+
+
+  /* ── Lightbox ── */
+  #lightbox {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,.9); align-items: center; justify-content: center;
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 92vw; max-height: 88vh; border-radius: 12px; }
+  #lightbox-close {
+    position: fixed; top: 18px; right: 20px; color: #fff;
+    font-size: 2rem; cursor: pointer; line-height: 1;
+  }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(16px);
+    background: var(--dark); color: #fff; padding: 11px 26px; border-radius: 28px;
+    font-size: .88rem; opacity: 0; pointer-events: none; transition: all .32s;
+    z-index: 9000; white-space: nowrap;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }

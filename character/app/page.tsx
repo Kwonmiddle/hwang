@@ -1,9 +1,6 @@
-import { SignatureBoard } from "@/components/SignatureBoard";
+import { CampaignSite } from "@/components/CampaignSite";
+import "./campaign-home.css";
 
 export default function Home() {
-  return (
-    <main className="min-h-screen bg-slate-100">
-      <SignatureBoard />
-    </main>
-  );
+  return <CampaignSite />;
 }
