@@ -26,6 +26,17 @@ function scaleFromCount(count: number) {
   return 1 + Math.floor(count / 100) * 0.1;
 }
 
+/** 막대 100%가 되는 기준(건). 넘치면 가득 찬 상태로 유지 — 숫자는 위쪽이 정확한 값. */
+const FISH_METER_MAX = 800;
+
+function fishMeterPercent(raw: number) {
+  if (raw <= 0) return 0;
+  const linear = (raw / FISH_METER_MAX) * 100;
+  // 아주 적을 때도 살짝 보이게
+  const boosted = Math.max(8, linear);
+  return Math.min(100, boosted);
+}
+
 const ITEMS: Array<{
   key: Key;
   title: string;
@@ -66,12 +77,23 @@ function SignatureCol({
       <div className="mt-1">
         <OtterSprite motion={1} width={34} scale={scaleFromCount(raw)} ariaLabel="수달 동작1" />
       </div>
-      <div className="grid w-full grid-cols-4 justify-items-center gap-x-0 gap-y-[2px] pt-1 text-[0.68rem] leading-none opacity-90">
-        {Array.from({ length: Math.min(raw, 200) }).map((_, i) => (
-          <span key={i} aria-hidden="true">
-            🐟
-          </span>
-        ))}
+      <div
+        className="mt-1.5 w-full max-w-[76px]"
+        aria-hidden
+        title={`서명 ${raw.toLocaleString("ko-KR")}건 (막대는 대략적인 비율)`}
+      >
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-900/10">
+          <div
+            className="h-full max-w-full rounded-full transition-[width] duration-700 ease-out"
+            style={{
+              width: `${fishMeterPercent(raw)}%`,
+              backgroundColor: item.color,
+            }}
+          />
+        </div>
+        <div className="mt-0.5 text-center text-[0.6rem] leading-none opacity-60">
+          🐟
+        </div>
       </div>
     </div>
   );
