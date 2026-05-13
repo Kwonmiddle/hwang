@@ -49,21 +49,46 @@ export function OtterSprite({
 
   useEffect(() => {
     let raf: number | null = null;
-    let last = 0;
-    let acc = 0;
+    const clock = { last: 0, acc: 0 };
+
+    const flushBurst = () => {
+      clock.last = 0;
+      clock.acc = 0;
+    };
+
     const step = (now: number) => {
-      if (!last) last = now;
-      const dt = now - last;
-      last = now;
-      acc += dt;
-      if (acc >= frameMs) {
-        acc -= frameMs;
+      if (!clock.last) clock.last = now;
+      const rawDt = now - clock.last;
+      clock.last = now;
+      // 탭 백그라운드·절전 등으로 dt가 크게 벌어지면 누적 제거 (틱 폭주 방지)
+      const gapSlipMs = Math.max(1000, frameMs * 8);
+      if (rawDt > gapSlipMs) {
+        clock.acc = 0;
+      } else {
+        clock.acc += rawDt;
+      }
+      if (clock.acc >= frameMs) {
+        clock.acc -= frameMs;
         setTick((t) => t + 1);
       }
       raf = requestAnimationFrame(step);
     };
+
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") {
+        if (raf) cancelAnimationFrame(raf);
+        raf = null;
+        flushBurst();
+      } else {
+        flushBurst();
+        if (!raf) raf = requestAnimationFrame(step);
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibility);
     raf = requestAnimationFrame(step);
     return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [frameMs]);

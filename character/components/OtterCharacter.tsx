@@ -43,9 +43,14 @@ export function OtterCharacter({
 
   const step = useCallback((now: number) => {
     if (!lastRef.current) lastRef.current = now;
-    const dt = now - lastRef.current;
+    const rawDt = now - lastRef.current;
     lastRef.current = now;
-    accRef.current += dt;
+    const gapSlipMs = Math.max(1000, frameIntervalMs * 8);
+    if (rawDt > gapSlipMs) {
+      accRef.current = 0;
+    } else {
+      accRef.current += rawDt;
+    }
     if (accRef.current >= frameIntervalMs) {
       accRef.current -= frameIntervalMs;
       setTick((t) => t + 1);
@@ -60,8 +65,10 @@ export function OtterCharacter({
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
         lastRef.current = 0;
+        accRef.current = 0;
       } else if (document.visibilityState === "visible" && !rafRef.current) {
         lastRef.current = 0;
+        accRef.current = 0;
         rafRef.current = requestAnimationFrame(step);
       }
     };
