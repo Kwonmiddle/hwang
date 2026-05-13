@@ -183,7 +183,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
         서대문 <span style={{ color: "#a67c52" }}>수달이</span>를 키워주세요!
       </h1>
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-sm leading-relaxed text-slate-500">
-        서대문에서 해결할 4가지 문제!
+        서대문에서 해결 할 <strong>4</strong>가지 문제!
         <br />
         황경산 구의원 후보가 시민들과 함께 해결하겠습니다!
       </p>
