@@ -67,19 +67,18 @@ const ITEMS: Array<{
   },
 ];
 
-/** 전체 서명 합계가 이 값을 넘으면 열 수달 스프라이트를 동작2로 전환 */
+/** 이 과제(열) 서명 수가 넘으면 해당 열 수달만 동작2 */
 const OTTER_MOTION2_THRESHOLD = 500;
 
 function SignatureCol({
   item,
   raw,
-  otterMotion,
 }: {
   item: (typeof ITEMS)[number];
   raw: number;
-  otterMotion: 1 | 2;
 }) {
   const display = useCountUp(raw);
+  const otterMotion: 1 | 2 = raw > OTTER_MOTION2_THRESHOLD ? 2 : 1;
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="text-xl font-black leading-none" style={{ color: item.color }}>
@@ -164,9 +163,6 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
     keepPreviousData: true,
   });
 
-  const grandTotal = data?.grandTotal ?? 0;
-  const otterMotion: 1 | 2 = grandTotal > OTTER_MOTION2_THRESHOLD ? 2 : 1;
-
   return (
     <section
       className={
@@ -189,12 +185,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
 
       <div className="mt-6 grid grid-cols-4 gap-x-1 gap-y-3">
         {ITEMS.map((it) => (
-          <SignatureCol
-            key={it.key}
-            item={it}
-            raw={data?.totals?.[it.key] ?? 0}
-            otterMotion={otterMotion}
-          />
+          <SignatureCol key={it.key} item={it} raw={data?.totals?.[it.key] ?? 0} />
         ))}
       </div>
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-[0.65rem] leading-relaxed text-slate-400">
