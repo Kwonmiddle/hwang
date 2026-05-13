@@ -67,12 +67,17 @@ const ITEMS: Array<{
   },
 ];
 
+/** 전체 서명 합계가 이 값을 넘으면 열 수달 스프라이트를 동작2로 전환 */
+const OTTER_MOTION2_THRESHOLD = 500;
+
 function SignatureCol({
   item,
   raw,
+  otterMotion,
 }: {
   item: (typeof ITEMS)[number];
   raw: number;
+  otterMotion: 1 | 2;
 }) {
   const display = useCountUp(raw);
   return (
@@ -106,7 +111,12 @@ function SignatureCol({
         </button>
       )}
       <div className="mt-1">
-        <OtterSprite motion={1} width={34} scale={scaleFromCount(raw)} ariaLabel="수달 동작1" />
+        <OtterSprite
+          motion={otterMotion}
+          width={34}
+          scale={scaleFromCount(raw)}
+          ariaLabel={otterMotion === 2 ? "수달 동작2" : "수달 동작1"}
+        />
       </div>
       <div
         className="mt-2 w-full max-w-[92px]"
@@ -154,6 +164,9 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
     keepPreviousData: true,
   });
 
+  const grandTotal = data?.grandTotal ?? 0;
+  const otterMotion: 1 | 2 = grandTotal > OTTER_MOTION2_THRESHOLD ? 2 : 1;
+
   return (
     <section
       className={
@@ -176,7 +189,12 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
 
       <div className="mt-6 grid grid-cols-4 gap-x-1 gap-y-3">
         {ITEMS.map((it) => (
-          <SignatureCol key={it.key} item={it} raw={data?.totals?.[it.key] ?? 0} />
+          <SignatureCol
+            key={it.key}
+            item={it}
+            raw={data?.totals?.[it.key] ?? 0}
+            otterMotion={otterMotion}
+          />
         ))}
       </div>
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-[0.65rem] leading-relaxed text-slate-400">
