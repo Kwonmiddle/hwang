@@ -9,6 +9,11 @@ import {
 } from "react";
 import { SignatureBoard } from "@/components/SignatureBoard";
 import { OtterSprite } from "@/components/OtterSprite";
+import { useSwipeSlideChange } from "@/hooks/useSwipeSlideChange";
+
+const SWIPE_COACH_STORAGE_KEY = "hwang-swipe-coach-dismissed-v1";
+const SWIPE_COACH_SHOW_MS = 2600;
+const SWIPE_COACH_FADE_MS = 420;
 
 function scheduleToastClear(
   setMsg: (s: string) => void,
@@ -146,6 +151,29 @@ function CampaignSnsFooter() {
   );
 }
 
+function SwipeHints({ slide }: { slide: number }) {
+  return (
+    <>
+      {slide > 0 ? (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1.5 top-1/2 z-[25] -translate-y-1/2 select-none text-2xl font-light text-slate-600/45 drop-shadow-[0_0_8px_rgba(255,255,255,.9)]"
+        >
+          ‹
+        </span>
+      ) : null}
+      {slide < 3 ? (
+        <span
+          aria-hidden
+          className="pointer-events-none absolute right-1.5 top-1/2 z-[25] -translate-y-1/2 select-none text-2xl font-light text-slate-600/45 drop-shadow-[0_0_8px_rgba(255,255,255,.9)]"
+        >
+          ›
+        </span>
+      ) : null}
+    </>
+  );
+}
+
 export function CampaignSite() {
   const [slide, setSlideState] = useState(0);
   const [toast, setToast] = useState("");
@@ -155,6 +183,12 @@ export function CampaignSite() {
   const [accSupport, setAccSupport] = useState(true);
   const [accPledgeIntro, setAccPledgeIntro] = useState(false);
   const [accPledgeList, setAccPledgeList] = useState(true);
+
+  const [swipeCoachOn, setSwipeCoachOn] = useState(false);
+  const [swipeCoachFade, setSwipeCoachFade] = useState(false);
+  const swipeCoachShowTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
@@ -172,6 +206,82 @@ export function CampaignSite() {
       );
     }
   }, []);
+
+  const slideRef = useRef(slide);
+  slideRef.current = slide;
+
+  const swipePageRef = useSwipeSlideChange(
+    useCallback(() => {
+      setSlide(slideRef.current + 1);
+    }, [setSlide]),
+    useCallback(() => {
+      setSlide(slideRef.current - 1);
+    }, [setSlide]),
+  );
+
+  const dismissSwipeCoach = useCallback(() => {
+    if (swipeCoachShowTimerRef.current) {
+      clearTimeout(swipeCoachShowTimerRef.current);
+      swipeCoachShowTimerRef.current = null;
+    }
+    setSwipeCoachFade(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (sessionStorage.getItem(SWIPE_COACH_STORAGE_KEY)) return;
+    } catch {
+      return;
+    }
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const showMs = reduced ? 1200 : SWIPE_COACH_SHOW_MS;
+    setSwipeCoachOn(true);
+    swipeCoachShowTimerRef.current = setTimeout(() => {
+      swipeCoachShowTimerRef.current = null;
+      setSwipeCoachFade(true);
+    }, showMs);
+    return () => {
+      if (swipeCoachShowTimerRef.current) {
+        clearTimeout(swipeCoachShowTimerRef.current);
+        swipeCoachShowTimerRef.current = null;
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!swipeCoachOn || swipeCoachFade) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") dismissSwipeCoach();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [swipeCoachOn, swipeCoachFade, dismissSwipeCoach]);
+
+  useEffect(() => {
+    if (!swipeCoachOn) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [swipeCoachOn]);
+
+  useEffect(() => {
+    if (!swipeCoachFade) return;
+    const t = setTimeout(() => {
+      setSwipeCoachOn(false);
+      setSwipeCoachFade(false);
+      try {
+        sessionStorage.setItem(SWIPE_COACH_STORAGE_KEY, "1");
+      } catch {
+        /* noop */
+      }
+    }, SWIPE_COACH_FADE_MS);
+    return () => clearTimeout(t);
+  }, [swipeCoachFade]);
 
   const syncSlideViewportHeight = useCallback(() => {
     const vp = viewportRef.current;
@@ -278,8 +388,14 @@ export function CampaignSite() {
 
   return (
     <div className="campaign-root" ref={rootRef} data-slide={slide}>
-      <div className="page">
-        <div className="slide-viewport" ref={viewportRef} aria-live="polite">
+      <div className="slide-swipe-shell relative w-full max-w-[var(--col)]">
+        <div
+          ref={swipePageRef}
+          className="page relative touch-pan-y"
+          style={{ touchAction: "pan-y", overscrollBehaviorX: "contain" }}
+        >
+          <SwipeHints slide={slide} />
+          <div className="slide-viewport" ref={viewportRef} aria-live="polite">
           <div
             className="slide-track"
             style={{ transform: `translateX(-${slide * 25}%)` }}
@@ -713,6 +829,10 @@ export function CampaignSite() {
             </section>
           </div>
         </div>
+        </div>
+        <p className="swipe-hint-label">
+          ◀ 좌우로 밀어 페이지 이동 ▶
+        </p>
       </div>
 
       <nav className="dock-nav" aria-label="페이지 메뉴">
@@ -802,6 +922,35 @@ export function CampaignSite() {
       >
         {toast}
       </div>
+
+      {swipeCoachOn ? (
+        <div
+          className={`fixed inset-0 z-[850] flex cursor-pointer items-center justify-center bg-black/55 p-4 backdrop-blur-[2px] transition-opacity duration-[420ms] ease-out ${
+            swipeCoachFade ? "pointer-events-none opacity-0" : "opacity-100"
+          }`}
+          onClick={dismissSwipeCoach}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="swipe-coach-title"
+        >
+          <div className="swipe-coach-card pointer-events-none mx-auto max-w-[min(92vw,20rem)] rounded-2xl bg-white px-5 py-6 text-center shadow-2xl ring-1 ring-slate-900/10">
+            <p
+              id="swipe-coach-title"
+              className="text-lg font-extrabold tracking-tight text-slate-900"
+            >
+              ◀ 좌우로 밀어 페이지 이동 ▶
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+              폰 화면을 좌우로 밀면
+              <br />
+              홈 · 후보 소개 · 공약 · 더보기로 넘길 수 있어요.
+            </p>
+            <p className="mt-4 text-xs font-medium text-slate-400">
+              화면을 누르면 바로 닫힙니다
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

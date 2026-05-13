@@ -43,11 +43,28 @@ const ITEMS: Array<{
   key: Key;
   title: string;
   color: string;
+  /** Google Forms 등 서명 페이지 */
+  signUrl?: string;
 }> = [
-  { key: "coup", title: "내란세력없는\n서대문 만들기", color: "#ed174c" },
+  {
+    key: "coup",
+    title: "내란세력없는\n서대문 만들기",
+    color: "#ed174c",
+    signUrl: "https://forms.gle/h3UeuYRi1bMig17s8",
+  },
   { key: "solo", title: "1인가구 동별\n지원센터 설치", color: "#f15623" },
-  { key: "baekryeonsan", title: "백련산 끈끈이\n롤트랩 반대", color: "#008c69" },
-  { key: "seobu", title: "서부선\n공공 신속 추진", color: "#009ee2" },
+  {
+    key: "baekryeonsan",
+    title: "백련산 끈끈이\n롤트랩 반대",
+    color: "#008c69",
+    signUrl: "https://forms.gle/7YBA7bLeQUDKeyK79",
+  },
+  {
+    key: "seobu",
+    title: "서부선\n공공 신속 추진",
+    color: "#009ee2",
+    signUrl: "https://forms.gle/7LGXVS39Sddv3bHSA",
+  },
 ];
 
 function SignatureCol({
@@ -69,13 +86,25 @@ function SignatureCol({
       >
         {item.title}
       </div>
-      <button
-        type="button"
-        className="mt-0.5 w-full max-w-[86px] rounded-lg px-2 py-1.5 text-[0.72rem] font-bold text-white"
-        style={{ background: item.color }}
-      >
-        서명하기
-      </button>
+      {item.signUrl ? (
+        <a
+          href={item.signUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-0.5 inline-flex w-full max-w-[86px] items-center justify-center rounded-lg px-2 py-1.5 text-center text-[0.72rem] font-bold text-white no-underline"
+          style={{ background: item.color }}
+        >
+          서명하기
+        </a>
+      ) : (
+        <button
+          type="button"
+          className="mt-0.5 w-full max-w-[86px] rounded-lg px-2 py-1.5 text-[0.72rem] font-bold text-white"
+          style={{ background: item.color }}
+        >
+          서명하기
+        </button>
+      )}
       <div className="mt-1">
         <OtterSprite motion={1} width={34} scale={scaleFromCount(raw)} ariaLabel="수달 동작1" />
       </div>
