@@ -1,8 +1,21 @@
+import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+/**
+ * 숫자 집계만 할 때 기본값: GAS 호출·서버 작업 빈도 (초).
+ * 일반 트래픽에서는 5분만으로도 과금 걱정은 거의 없지만,
+ * 서명 수가 분 단위로 바뀔 필요가 없다면 길게 두는 편이 GAS·Vercel 모두 여유 있습니다.
+ */
+const SIGNATURE_REVALIDATE_SEC = 1800;
+
+/** CDN이 오래된 응답을 잠깐이라도 빨리 줄 수 있는 시간(초) */
+const STALE_WHILE_REVALIDATE_SEC = 7200;
+
 type Key = "coup" | "solo" | "baekryeonsan" | "seobu";
+
+const KEYS: Key[] = ["coup", "solo", "baekryeonsan", "seobu"];
 
 type GasResponse = {
   count: number | string;
@@ -21,76 +34,169 @@ function env(name: string): string | undefined {
 
 async function fetchCount(url?: string): Promise<number> {
   if (!url) return 0;
-  const res = await fetch(url, {
-    // Next.js data cache: 60s
-    next: { revalidate: 60 },
-  });
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Upstream ${res.status}`);
   const json = (await res.json()) as Partial<GasResponse>;
   return num(json.count);
 }
 
+type Snapshot = {
+  totals: Record<Key, number>;
+  breakdown: Record<Key, { online: number; offline: number; total: number }>;
+  grandTotal: number;
+  fetchedAt: number;
+};
+
+function emptyBreakdownFromTotals(totals: Record<Key, number>): Snapshot["breakdown"] {
+  const o = {} as Snapshot["breakdown"];
+  for (const k of KEYS) {
+    const t = totals[k];
+    o[k] = { online: 0, offline: 0, total: t };
+  }
+  return o;
+}
+
+/**
+ * GAS에 “합산 JSON 한 번에 반환” 웹앱 URL을 두면 8회 fetch → 1회로 줄일 수 있습니다.
+ * 응답 예:
+ * { "totals": { "coup": 1, "solo": 2, "baekryeonsan": 0, "seobu": 3 },
+ *   "breakdown": { "coup": { "online": 1, "offline": 0, "total": 1 }, ... } }
+ * breakdown 생략 시 totals만으로 채웁니다.
+ */
+async function fetchSnapshotSingle(url: string): Promise<Snapshot> {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error(`Snapshot ${res.status}`);
+  const raw = (await res.json()) as {
+    totals?: Partial<Record<Key, unknown>>;
+    breakdown?: Partial<
+      Record<Key, { online?: unknown; offline?: unknown; total?: unknown }>
+    >;
+    grandTotal?: unknown;
+  };
+
+  const totals = {
+    coup: num(raw.totals?.coup),
+    solo: num(raw.totals?.solo),
+    baekryeonsan: num(raw.totals?.baekryeonsan),
+    seobu: num(raw.totals?.seobu),
+  };
+
+  let breakdown: Snapshot["breakdown"];
+  if (raw.breakdown) {
+    breakdown = {} as Snapshot["breakdown"];
+    for (const k of KEYS) {
+      const b = raw.breakdown[k];
+      if (b) {
+        const online = num(b.online);
+        const offline = num(b.offline);
+        breakdown[k] = {
+          online,
+          offline,
+          total: num(b.total) || online + offline,
+        };
+      } else {
+        const t = totals[k];
+        breakdown[k] = { online: 0, offline: 0, total: t };
+      }
+    }
+  } else {
+    breakdown = emptyBreakdownFromTotals(totals);
+  }
+
+  const grandTotal = num(raw.grandTotal) || KEYS.reduce((s, k) => s + totals[k], 0);
+
+  return {
+    totals,
+    breakdown,
+    grandTotal,
+    fetchedAt: Date.now(),
+  };
+}
+
+async function computeSnapshotParallel(): Promise<Snapshot> {
+  const urls = {
+    coup: {
+      online: env("GAS_COUP_ONLINE_URL"),
+      offline: env("GAS_COUP_OFFLINE_URL"),
+    },
+    solo: {
+      online: env("GAS_SOLO_ONLINE_URL"),
+      offline: env("GAS_SOLO_OFFLINE_URL"),
+    },
+    baekryeonsan: {
+      online: env("GAS_BAEKRYEONSAN_ONLINE_URL"),
+      offline: env("GAS_BAEKRYEONSAN_OFFLINE_URL"),
+    },
+    seobu: {
+      online: env("GAS_SEOBU_ONLINE_URL"),
+      offline: env("GAS_SEOBU_OFFLINE_URL"),
+    },
+  } as const;
+
+  const results = await Promise.all(
+    KEYS.map(async (k) => {
+      const u = urls[k];
+      const [online, offline] = await Promise.all([
+        fetchCount(u.online),
+        fetchCount(u.offline),
+      ]);
+      return [k, { online, offline, total: online + offline }] as const;
+    }),
+  );
+
+  const byKey = Object.fromEntries(results) as Record<
+    Key,
+    { online: number; offline: number; total: number }
+  >;
+
+  const totals = {
+    coup: byKey.coup.total,
+    solo: byKey.solo.total,
+    baekryeonsan: byKey.baekryeonsan.total,
+    seobu: byKey.seobu.total,
+  };
+
+  const grandTotal =
+    totals.coup + totals.solo + totals.baekryeonsan + totals.seobu;
+
+  return {
+    totals,
+    breakdown: byKey,
+    grandTotal,
+    fetchedAt: Date.now(),
+  };
+}
+
+async function computeSnapshot(): Promise<Snapshot> {
+  const snapshotUrl = env("GAS_SIGNATURES_SNAPSHOT_URL");
+  if (snapshotUrl) {
+    return fetchSnapshotSingle(snapshotUrl);
+  }
+  return computeSnapshotParallel();
+}
+
+function cacheKeyParts() {
+  return [
+    "signatures-v3",
+    env("GAS_SIGNATURES_SNAPSHOT_URL") ? "single" : "parallel",
+  ] as const;
+}
+
+const getCachedSnapshot = unstable_cache(
+  () => computeSnapshot(),
+  [...cacheKeyParts()],
+  { revalidate: SIGNATURE_REVALIDATE_SEC },
+);
+
 export async function GET() {
   try {
-    const urls = {
-      coup: {
-        online: env("GAS_COUP_ONLINE_URL"),
-        offline: env("GAS_COUP_OFFLINE_URL"),
+    const body = await getCachedSnapshot();
+    return NextResponse.json(body, {
+      headers: {
+        "cache-control": `s-maxage=${SIGNATURE_REVALIDATE_SEC}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SEC}`,
       },
-      solo: {
-        online: env("GAS_SOLO_ONLINE_URL"),
-        offline: env("GAS_SOLO_OFFLINE_URL"),
-      },
-      baekryeonsan: {
-        online: env("GAS_BAEKRYEONSAN_ONLINE_URL"),
-        offline: env("GAS_BAEKRYEONSAN_OFFLINE_URL"), // optional, may be undefined
-      },
-      seobu: {
-        online: env("GAS_SEOBU_ONLINE_URL"),
-        offline: env("GAS_SEOBU_OFFLINE_URL"), // optional, may be undefined
-      },
-    } as const;
-
-    const keys: Key[] = ["coup", "solo", "baekryeonsan", "seobu"];
-
-    const results = await Promise.all(
-      keys.map(async (k) => {
-        const u = urls[k];
-        const [online, offline] = await Promise.all([
-          fetchCount(u.online),
-          fetchCount(u.offline),
-        ]);
-        return [k, { online, offline, total: online + offline }] as const;
-      }),
-    );
-
-    const byKey = Object.fromEntries(results) as Record<
-      Key,
-      { online: number; offline: number; total: number }
-    >;
-
-    const totals = {
-      coup: byKey.coup.total,
-      solo: byKey.solo.total,
-      baekryeonsan: byKey.baekryeonsan.total,
-      seobu: byKey.seobu.total,
-    };
-
-    const grandTotal =
-      totals.coup + totals.solo + totals.baekryeonsan + totals.seobu;
-
-    return NextResponse.json(
-      {
-        totals,
-        breakdown: byKey,
-        grandTotal,
-        fetchedAt: Date.now(),
-      },
-      { headers: { "cache-control": "s-maxage=60, stale-while-revalidate=300" } },
-    );
+    });
   } catch {
-    // Silent failure: return 204, client keeps previous value
     return new NextResponse(null, { status: 204 });
   }
 }
-
