@@ -316,6 +316,11 @@
     flex-direction: column;
     justify-content: flex-end;
   }
+  .profile-header.profile-header--hwang2 {
+    background-image:
+      linear-gradient(180deg, rgba(0,0,0,.08) 0%, rgba(0,0,0,.06) 45%, rgba(0,0,0,.78) 100%),
+      url("/hwang2.jpg");
+  }
   .header-bottom {
     width: 100%;
     padding-top: 90px; /* 얼굴 영역 확보 */

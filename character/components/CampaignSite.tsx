@@ -18,6 +18,134 @@ function scheduleToastClear(
   return setTimeout(() => setMsg(""), 3000);
 }
 
+function ShareAndSupportActions({
+  onShare,
+  onSupport,
+}: {
+  onShare: () => void;
+  onSupport: () => void;
+}) {
+  return (
+    <div className="profile-actions">
+      <button
+        type="button"
+        className="profile-action-btn"
+        aria-label="페이지 공유"
+        onClick={onShare}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+          <polyline points="16 6 12 2 8 6" />
+          <line x1="12" y1="2" x2="12" y2="15" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        className="profile-action-btn"
+        aria-label="지지 선언"
+        onClick={onSupport}
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+function CampaignSnsFooter() {
+  return (
+    <>
+      <div className="sns-icon-row">
+        <a
+          className="sns-icon-btn"
+          href="https://www.instagram.com/hwangkyungsan"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="인스타그램"
+        >
+          <img
+            src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/instagram.svg"
+            alt=""
+          />
+        </a>
+        <a
+          className="sns-icon-btn"
+          href="https://www.youtube.com/@kyungsan98"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="유튜브"
+        >
+          <img
+            src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/youtube.svg"
+            alt=""
+          />
+        </a>
+        <a
+          className="sns-icon-btn"
+          href="https://www.facebook.com/rhfdkttl"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="페이스북"
+        >
+          <img
+            src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/facebook.svg"
+            alt=""
+          />
+        </a>
+        <a
+          className="sns-icon-btn"
+          href="https://www.threads.com/@hwangkyungsan"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="스레드"
+        >
+          <img
+            src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/threads.svg"
+            alt=""
+          />
+        </a>
+        <a
+          className="sns-icon-btn"
+          href="https://blog.naver.com/kyungsan98"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="네이버 블로그"
+        >
+          <img
+            src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/naver.svg"
+            alt=""
+          />
+        </a>
+      </div>
+
+      <footer className="page-footer">
+        <p>
+          <strong>황경산 후보 선거사무소 | 정의당 서대문구 마선거구</strong>
+        </p>
+        <p>서울특별시 서대문구 증가로 123 | 02-XXXX-XXXX</p>
+      </footer>
+    </>
+  );
+}
+
 export function CampaignSite() {
   const [slide, setSlideState] = useState(0);
   const [toast, setToast] = useState("");
@@ -25,6 +153,8 @@ export function CampaignSite() {
   const [accProfile, setAccProfile] = useState(false);
   const [accPledge, setAccPledge] = useState(true);
   const [accSupport, setAccSupport] = useState(true);
+  const [accPledgeIntro, setAccPledgeIntro] = useState(false);
+  const [accPledgeList, setAccPledgeList] = useState(true);
 
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const panelRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
@@ -33,7 +163,7 @@ export function CampaignSite() {
   const setSlide = useCallback((idx: number) => {
     const i = Math.max(0, Math.min(3, idx));
     setSlideState(i);
-    const tail = i === 1 ? "#intro" : "";
+    const tail = i === 1 ? "#intro" : i === 2 ? "#pledge" : "";
     if (typeof window !== "undefined") {
       history.replaceState(
         null,
@@ -75,6 +205,8 @@ export function CampaignSite() {
     if (typeof window === "undefined") return;
     if (window.location.hash === "#intro") {
       setSlideState(1);
+    } else if (window.location.hash === "#pledge") {
+      setSlideState(2);
     }
   }, []);
 
@@ -193,47 +325,7 @@ export function CampaignSite() {
             >
               <div className="slide-panel-inner">
                 <header className="profile-header" style={{ position: "relative" }}>
-                  <div className="profile-actions">
-                    <button
-                      type="button"
-                      className="profile-action-btn"
-                      aria-label="페이지 공유"
-                      onClick={doShare}
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                      >
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                        <polyline points="16 6 12 2 8 6" />
-                        <line x1="12" y1="2" x2="12" y2="15" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      className="profile-action-btn"
-                      aria-label="지지 선언"
-                      onClick={doSupport}
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden
-                      >
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                      </svg>
-                    </button>
-                  </div>
+                  <ShareAndSupportActions onShare={doShare} onSupport={doSupport} />
                   <div className="header-bottom">
                     <div className="party-logo-wrap">
                       <img src="/justice_logo_wh.svg" alt="정의당" />
@@ -430,75 +522,7 @@ export function CampaignSite() {
                     </div>
                   </div>
 
-                  <div className="sns-icon-row">
-                    <a
-                      className="sns-icon-btn"
-                      href="https://www.instagram.com/hwangkyungsan"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="인스타그램"
-                    >
-                      <img
-                        src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/instagram.svg"
-                        alt=""
-                      />
-                    </a>
-                    <a
-                      className="sns-icon-btn"
-                      href="https://www.youtube.com/@kyungsan98"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="유튜브"
-                    >
-                      <img
-                        src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/youtube.svg"
-                        alt=""
-                      />
-                    </a>
-                    <a
-                      className="sns-icon-btn"
-                      href="https://www.facebook.com/rhfdkttl"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="페이스북"
-                    >
-                      <img
-                        src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/facebook.svg"
-                        alt=""
-                      />
-                    </a>
-                    <a
-                      className="sns-icon-btn"
-                      href="https://www.threads.com/@hwangkyungsan"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="스레드"
-                    >
-                      <img
-                        src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/threads.svg"
-                        alt=""
-                      />
-                    </a>
-                    <a
-                      className="sns-icon-btn"
-                      href="https://blog.naver.com/kyungsan98"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label="네이버 블로그"
-                    >
-                      <img
-                        src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/naver.svg"
-                        alt=""
-                      />
-                    </a>
-                  </div>
-
-                  <footer className="page-footer">
-                    <p>
-                      <strong>황경산 후보 선거사무소 | 정의당 서대문구 마선거구</strong>
-                    </p>
-                    <p>서울특별시 서대문구 증가로 123 | 02-XXXX-XXXX</p>
-                  </footer>
+                  <CampaignSnsFooter />
                 </div>
               </div>
             </section>
@@ -509,9 +533,171 @@ export function CampaignSite() {
               aria-label="공약 한눈에"
               ref={setPanelRef(2)}
             >
-              <div className="slide-panel-inner placeholder-slide">
-                <strong>공약 한눈에</strong>
-                <span>준비 중입니다.</span>
+              <div className="slide-panel-inner">
+                <header
+                  className="profile-header profile-header--hwang2"
+                  style={{ position: "relative" }}
+                >
+                  <ShareAndSupportActions onShare={doShare} onSupport={doSupport} />
+                  <div className="header-bottom">
+                    <div className="party-logo-wrap">
+                      <img src="/justice_logo_wh.svg" alt="정의당" />
+                    </div>
+                    <h1 className="profile-name">
+                      황<em>경산</em>
+                    </h1>
+                    <p className="profile-role">공약 한눈에 · 무지개 가좌 플랜</p>
+                    <div className="profile-district">
+                      📍 마선거구 · 남가좌동 · 북가좌동
+                    </div>
+                    <p className="profile-slogan">
+                      6가지 분야로
+                      <br />
+                      <strong style={{ color: "var(--accent)" }}>
+                        서대문을 바꿉니다
+                      </strong>
+                    </p>
+                  </div>
+                </header>
+
+                <div className="page-content">
+                  <div className="card">
+                    <button
+                      type="button"
+                      className="acc-trigger"
+                      aria-expanded={accPledgeIntro}
+                      onClick={() => setAccPledgeIntro((v) => !v)}
+                    >
+                      <span className="acc-left">
+                        <span className="acc-icon">📋</span>
+                        공약을 한눈에 보는 이유
+                      </span>
+                      <span className="acc-arrow">▼</span>
+                    </button>
+                    <div
+                      className={`acc-body${accPledgeIntro ? " open" : ""}`}
+                      id="acc-pledge-slide2-intro"
+                    >
+                      <p className="profile-bio" style={{ borderBottom: "none", marginBottom: 0, paddingBottom: 0 }}>
+                        지방선거는 후보뿐 아니라 <strong className="profile-bio-strong">무엇을 할지(공약)</strong>를
+                        비교하는 선거입니다. 무지개 가좌 플랜은 내란 청산·1인가구·돌봄·생태·교통·성평등·인권까지
+                        서대문에서 바로 체감할 수 있는 약속을 한곳에 모았습니다. 아래에서 분야별 세부 공약을
+                        확인해 주세요.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="card">
+                    <button
+                      type="button"
+                      className="acc-trigger"
+                      aria-expanded={accPledgeList}
+                      onClick={() => setAccPledgeList((v) => !v)}
+                    >
+                      <span className="acc-left">
+                        <span className="acc-icon">🌈</span>
+                        6대 분야 공약 요약
+                      </span>
+                      <span className="acc-arrow">▼</span>
+                    </button>
+                    <div
+                      className={`acc-body${accPledgeList ? " open" : ""}`}
+                      id="acc-pledge-slide2-list"
+                    >
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">01</div>
+                          <span className="pledge-icon-sm">🏠</span>
+                          <div className="pledge-title">1인가구 행복 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>1인가구 원스탑지원센터</li>
+                          <li>1인가구 무상 청소·심리상담</li>
+                        </ul>
+                      </div>
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">02</div>
+                          <span className="pledge-icon-sm">🤝</span>
+                          <div className="pledge-title">함께 돌봄 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>구립 심야어린이병원 설치</li>
+                          <li>가좌 공공돌봄센터 설치</li>
+                        </ul>
+                      </div>
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">03</div>
+                          <span className="pledge-icon-sm">🌿</span>
+                          <div className="pledge-title">생태 공존 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>5산2천 막개발 중단, 재자연화</li>
+                          <li>서대문 탄소중립지원센터 설치</li>
+                        </ul>
+                      </div>
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">04</div>
+                          <span className="pledge-icon-sm">🚌</span>
+                          <div className="pledge-title">15분 교통 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>마을버스 공영제 무상교통</li>
+                          <li>지하철 서부선 공공 신속 추진</li>
+                        </ul>
+                      </div>
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">05</div>
+                          <span className="pledge-icon-sm">⚧️</span>
+                          <div className="pledge-title">성평등 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>디지털성폭력 원샷지원센터 설치</li>
+                          <li>여성노동공제회로 4대보험 지원</li>
+                        </ul>
+                      </div>
+                      <div className="pledge-item">
+                        <div className="pledge-header">
+                          <div className="pledge-num-badge">06</div>
+                          <span className="pledge-icon-sm">🤲</span>
+                          <div className="pledge-title">함께 인권 가좌</div>
+                        </div>
+                        <ul className="pledge-sub">
+                          <li>서대문 차별금지 조례 제정</li>
+                          <li>장애인 맞춤 공공일자리 확대</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="card" style={{ padding: "18px 22px 22px" }}>
+                    <p
+                      className="profile-bio"
+                      style={{
+                        borderBottom: "none",
+                        marginBottom: 14,
+                        paddingBottom: 0,
+                      }}
+                    >
+                      인사말·지지 선언 폼은{" "}
+                      <strong className="profile-bio-strong">「후보 소개」</strong> 탭에서
+                      이어집니다.
+                    </p>
+                    <button
+                      type="button"
+                      className="home-cta"
+                      style={{ width: "100%", maxWidth: "100%" }}
+                      onClick={() => setSlide(1)}
+                    >
+                      후보 소개로 이동 →
+                    </button>
+                  </div>
+
+                  <CampaignSnsFooter />
+                </div>
               </div>
             </section>
             <section
