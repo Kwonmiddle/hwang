@@ -52,7 +52,12 @@ const ITEMS: Array<{
     color: "#ed174c",
     signUrl: "https://forms.gle/h3UeuYRi1bMig17s8",
   },
-  { key: "solo", title: "1인가구 동별\n지원센터 설치", color: "#f15623" },
+  {
+    key: "solo",
+    title: "1인가구 동별\n지원센터 설치",
+    color: "#f15623",
+    signUrl: "https://forms.gle/qyQ96n4fjdym5xvR6",
+  },
   {
     key: "baekryeonsan",
     title: "백련산 끈끈이\n롤트랩 반대",
