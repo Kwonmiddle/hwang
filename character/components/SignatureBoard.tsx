@@ -160,10 +160,10 @@ type SignatureBoardProps = {
 
 export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
   const { data } = useSWR<ApiResponse>("/api/signatures", fetcher, {
-    refreshInterval: 1_800_000,
+    refreshInterval: 600_000,
     revalidateOnFocus: true,
     shouldRetryOnError: true,
-    errorRetryInterval: 1_800_000,
+    errorRetryInterval: 600_000,
     errorRetryCount: undefined,
     keepPreviousData: true,
   });
@@ -194,7 +194,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
         ))}
       </div>
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-[0.65rem] leading-relaxed text-slate-400">
-        숫자 집계는 약 30분 간격으로 반영됩니다.
+        숫자 집계는 약 10분 간격으로 반영됩니다.
         <br />
         서명 수가 늘어날수록 수달이 커지고, 동작도 달라집니다.
       </p>

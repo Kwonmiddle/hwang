@@ -3,12 +3,8 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-/**
- * 숫자 집계만 할 때 기본값: GAS 호출·서버 작업 빈도 (초).
- * 일반 트래픽에서는 5분만으로도 과금 걱정은 거의 없지만,
- * 서명 수가 분 단위로 바뀔 필요가 없다면 길게 두는 편이 GAS·Vercel 모두 여유 있습니다.
- */
-const SIGNATURE_REVALIDATE_SEC = 1800;
+/** GAS·스냅샷 재호출 주기(초). Next `unstable_cache` 및 CDN `s-maxage`와 동일. */
+const SIGNATURE_REVALIDATE_SEC = 600;
 
 /** CDN이 오래된 응답을 잠깐이라도 빨리 줄 수 있는 시간(초) */
 const STALE_WHILE_REVALIDATE_SEC = 7200;
