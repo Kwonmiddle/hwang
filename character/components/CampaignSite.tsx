@@ -148,7 +148,7 @@ function CampaignSnsFooter() {
         <p>
           <strong>황경산 후보 선거사무소 | 정의당 서대문구 마선거구</strong>
         </p>
-        <p>서울특별시 서대문구 증가로 123 | 02-XXXX-XXXX</p>
+        <p>서울특별시 서대문구 증가로 123 | 010-4704-0626</p>
       </footer>
     </>
   );
