@@ -385,6 +385,7 @@ export function CampaignSite() {
               ref={setPanelRef(0)}
             >
               <div className="slide-panel-inner home-slide">
+                <ShareAndSupportActions onShare={doShare} />
                 <SignatureBoard embedded />
                 <div className="home-cta-stack">
                   <img

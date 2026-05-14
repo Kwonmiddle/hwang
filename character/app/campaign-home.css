@@ -73,6 +73,21 @@
     text-align: center;
     padding: 40px 24px 48px;
     background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
+    position: relative;
+  }
+  /* 홈(밝은 배경): 후보·공약 페이지와 동일 위치의 공유 버튼 가독 */
+  .home-slide .profile-actions {
+    z-index: 20;
+    justify-content: flex-start;
+  }
+  .home-slide .profile-action-btn {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: var(--dark);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  }
+  .home-slide .profile-action-btn:hover {
+    background: #fff;
   }
   .home-cta-stack {
     display: flex;

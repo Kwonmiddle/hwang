@@ -80,6 +80,20 @@
       text-align: center;
       padding: 40px 24px 48px;
       background: linear-gradient(180deg, #f0f0ec 0%, #fff 40%);
+      position: relative;
+    }
+    .home-slide .profile-actions {
+      z-index: 20;
+      justify-content: flex-start;
+    }
+    .home-slide .profile-action-btn {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      color: var(--dark);
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    }
+    .home-slide .profile-action-btn:hover {
+      background: #fff;
     }
     .home-cta-stack {
       display: flex;
@@ -556,6 +570,13 @@
       <div class="slide-track" id="slide-track">
         <section class="slide-panel" id="slide-0" aria-label="홈">
           <div class="slide-panel-inner home-slide">
+            <div class="profile-actions">
+              <button type="button" class="profile-action-btn" id="share-btn0" aria-label="페이지 공유">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+              </button>
+            </div>
             <div class="home-hero-otter" id="home-hero-otter" role="img" aria-label="수달 동작3">
               <div class="home-otter-sprite" id="home-hero-otter-sprite"></div>
             </div>
@@ -849,7 +870,8 @@
         showToast('링크가 복사됐습니다.');
       }
     }
-    document.getElementById('share-btn2').addEventListener('click', doShare);
+    document.getElementById('share-btn0')?.addEventListener('click', doShare);
+    document.getElementById('share-btn2')?.addEventListener('click', doShare);
 
     /* ── Scroll reveal ── */
     const revObs = new IntersectionObserver(entries => {
