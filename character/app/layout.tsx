@@ -5,11 +5,28 @@ const siteTitle = "서대문 수달이를 키워주세요";
 const siteDescription =
   "서대문에서 해결 할 4가지 문제! 황경산 구의원 후보가 시민들과 함께 해결하겠습니다!";
 
+/** OG·canonical 절대 URL. 미설정 시 배포 환경별 추정(카카오 등은 절대 URL 필수). */
 function metadataBase(): URL {
-  const explicit = process.env.NEXT_PUBLIC_SITE_URL;
+  const explicit = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (explicit) return new URL(explicit);
-  if (process.env.VERCEL_URL) return new URL(`https://${process.env.VERCEL_URL}`);
-  return new URL("http://localhost:3000");
+
+  const vercelProd = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (vercelProd) {
+    const host = vercelProd.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return new URL(`https://${host}`);
+  }
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) {
+    const host = vercel.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    return new URL(`https://${host}`);
+  }
+
+  if (process.env.NODE_ENV !== "production") {
+    return new URL("http://localhost:3000");
+  }
+
+  return new URL("https://hwangkyungsan.com");
 }
 
 export const metadata: Metadata = {
@@ -21,10 +38,12 @@ export const metadata: Metadata = {
     description: siteDescription,
     type: "website",
     locale: "ko_KR",
+    url: "/",
     images: [
       {
         url: "/data_og.jpg",
         alt: siteTitle,
+        type: "image/jpeg",
       },
     ],
   },
