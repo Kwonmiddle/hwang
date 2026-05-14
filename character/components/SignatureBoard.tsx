@@ -13,7 +13,7 @@ type ApiResponse = {
 };
 
 const fetcher = async (url: string): Promise<ApiResponse> => {
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url);
   if (res.status === 204) {
     // Silent retry mode: let SWR keep previous data
     throw new Error("no-content");
@@ -78,16 +78,26 @@ const OTTER_MOTION2_THRESHOLD = 500;
 function SignatureCol({
   item,
   raw,
+  showNumbers,
 }: {
   item: (typeof ITEMS)[number];
   raw: number;
+  showNumbers: boolean;
 }) {
-  const display = useCountUp(raw);
+  const display = useCountUp(showNumbers ? raw : 0);
   const otterMotion: 1 | 2 = raw > OTTER_MOTION2_THRESHOLD ? 2 : 1;
   return (
     <div className="flex flex-col items-center gap-1">
-      <div className="text-xl font-black leading-none" style={{ color: item.color }}>
-        {display}
+      <div
+        className="min-h-[1.25rem] min-w-[2.25rem] text-center text-xl font-black tabular-nums leading-none"
+        style={{ color: item.color }}
+        aria-live="polite"
+      >
+        {showNumbers ? display : (
+          <span className="text-slate-300" aria-busy="true">
+            …
+          </span>
+        )}
       </div>
       <div
         className="whitespace-pre-line text-center text-[0.74rem] font-semibold leading-snug"
@@ -125,28 +135,30 @@ function SignatureCol({
       <div
         className="mt-2 w-full max-w-[92px]"
         aria-hidden
-        title={`서명 ${raw.toLocaleString("ko-KR")}건`}
+        title={showNumbers ? `서명 ${raw.toLocaleString("ko-KR")}건` : "집계 불러오는 중"}
       >
         <div className="mb-1.5 h-3.5 w-full overflow-hidden rounded-full bg-slate-900/10 shadow-inner">
           <div
             className="h-full max-w-full rounded-full transition-[width] duration-700 ease-out"
             style={{
-              width: `${fishMeterPercent(raw)}%`,
+              width: `${fishMeterPercent(showNumbers ? raw : 0)}%`,
               backgroundColor: item.color,
             }}
           />
         </div>
         <div className="relative flex h-[112px] w-full flex-wrap content-end items-end justify-center gap-px overflow-hidden rounded-xl border border-slate-900/10 bg-gradient-to-b from-slate-50 to-slate-100/90 px-0.5 pb-0.5 shadow-inner">
-          {raw > FISH_STACK_CAP ? (
+          {showNumbers && raw > FISH_STACK_CAP ? (
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-white from-40% to-transparent px-0.5 pb-3 pt-1 text-center text-[0.65rem] font-bold leading-tight text-slate-600">
               +{(raw - FISH_STACK_CAP).toLocaleString("ko-KR")}
             </div>
           ) : null}
-          {Array.from({ length: Math.min(raw, FISH_STACK_CAP) }).map((_, i) => (
-            <span key={i} className="select-none text-[10px] leading-[1.05]">
-              🐟
-            </span>
-          ))}
+          {showNumbers
+            ? Array.from({ length: Math.min(raw, FISH_STACK_CAP) }).map((_, i) => (
+                <span key={i} className="select-none text-[10px] leading-[1.05]">
+                  🐟
+                </span>
+              ))
+            : null}
         </div>
       </div>
     </div>
@@ -166,7 +178,10 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
     errorRetryInterval: 600_000,
     errorRetryCount: undefined,
     keepPreviousData: true,
+    suspense: false,
   });
+
+  const showNumbers = Boolean(data);
 
   return (
     <section
@@ -177,7 +192,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
       }
     >
       <div className="mb-2 flex items-end justify-center">
-        <OtterSprite motion={3} width={56} ariaLabel="수달 동작3" />
+        <OtterSprite motion={3} width={56} imagePriority ariaLabel="수달 동작3" />
       </div>
       <h1 className="text-center text-2xl font-extrabold tracking-tight text-slate-900">
         서대문 <span style={{ color: "#a67c52" }}>수달이</span>를 키워주세요!
@@ -190,7 +205,12 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
 
       <div className="mt-6 grid grid-cols-4 gap-x-1 gap-y-3">
         {ITEMS.map((it) => (
-          <SignatureCol key={it.key} item={it} raw={data?.totals?.[it.key] ?? 0} />
+          <SignatureCol
+            key={it.key}
+            item={it}
+            raw={data?.totals?.[it.key] ?? 0}
+            showNumbers={showNumbers}
+          />
         ))}
       </div>
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-[0.65rem] leading-relaxed text-slate-400">

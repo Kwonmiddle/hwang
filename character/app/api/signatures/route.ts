@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 /** GAS·스냅샷 재호출 주기(초). Next `unstable_cache` 및 CDN `s-maxage`와 동일. */
 const SIGNATURE_REVALIDATE_SEC = 600;
 
-/** CDN이 오래된 응답을 잠깐이라도 빨리 줄 수 있는 시간(초) */
+/** 브라우저·공유 캐시 모두에서 오래된 응답을 잠깐이라도 바로 줄 수 있는 시간(초) */
 const STALE_WHILE_REVALIDATE_SEC = 7200;
 
 type Key = "coup" | "solo" | "baekryeonsan" | "seobu";
@@ -129,21 +129,33 @@ async function computeSnapshotParallel(): Promise<Snapshot> {
     },
   } as const;
 
-  const results = await Promise.all(
-    KEYS.map(async (k) => {
+  /** 4키 × (온·오프라인) = 8회 GAS 호출을 한 번에 병렬 처리 */
+  const flat = await Promise.all(
+    KEYS.flatMap((k) => {
       const u = urls[k];
-      const [online, offline] = await Promise.all([
-        fetchCount(u.online),
-        fetchCount(u.offline),
-      ]);
-      return [k, { online, offline, total: online + offline }] as const;
+      return [
+        fetchCount(u.online).then((n) => ({ k, kind: "online" as const, n })),
+        fetchCount(u.offline).then((n) => ({ k, kind: "offline" as const, n })),
+      ];
     }),
   );
 
-  const byKey = Object.fromEntries(results) as Record<
-    Key,
-    { online: number; offline: number; total: number }
-  >;
+  const byKey = {
+    coup: { online: 0, offline: 0, total: 0 },
+    solo: { online: 0, offline: 0, total: 0 },
+    baekryeonsan: { online: 0, offline: 0, total: 0 },
+    seobu: { online: 0, offline: 0, total: 0 },
+  } satisfies Record<Key, { online: number; offline: number; total: number }>;
+
+  for (const row of flat) {
+    const slot = byKey[row.k];
+    if (row.kind === "online") slot.online = row.n;
+    else slot.offline = row.n;
+  }
+  for (const k of KEYS) {
+    const slot = byKey[k];
+    slot.total = slot.online + slot.offline;
+  }
 
   const totals = {
     coup: byKey.coup.total,
@@ -189,7 +201,8 @@ export async function GET() {
     const body = await getCachedSnapshot();
     return NextResponse.json(body, {
       headers: {
-        "cache-control": `s-maxage=${SIGNATURE_REVALIDATE_SEC}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SEC}`,
+        // max-age: 브라우저 즉시 재사용 / s-maxage: CDN / stale-while-revalidate: 백그라운드 갱신
+        "cache-control": `public, max-age=${SIGNATURE_REVALIDATE_SEC}, s-maxage=${SIGNATURE_REVALIDATE_SEC}, stale-while-revalidate=${STALE_WHILE_REVALIDATE_SEC}`,
       },
     });
   } catch {

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type Motion = 1 | 2 | 3;
@@ -14,10 +15,18 @@ type Props = {
   frameMs?: number;
   className?: string;
   ariaLabel?: string;
+  /**
+   * 스프라이트 시트 `char.png`를 Next Image로 우선 로드(LCP).
+   * 페이지당 한 컴포넌트만 켜는 것을 권장합니다.
+   */
+  imagePriority?: boolean;
 };
 
 const SHEET_FRAMES = 5;
 const JUMP_Y = -11;
+/** public/char.png 실제 픽셀 크기(스프라이트 시트) */
+const CHAR_SHEET_WIDTH = 1750;
+const CHAR_SHEET_HEIGHT = 300;
 
 function frameAtTick(motion: Motion, tick: number) {
   if (motion === 1) return [0, 1, 2, 1][tick % 4];
@@ -40,6 +49,7 @@ export function OtterSprite({
   frameMs = 140,
   className = "",
   ariaLabel = "수달",
+  imagePriority = false,
 }: Props) {
   const [tick, setTick] = useState(0);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -108,6 +118,19 @@ export function OtterSprite({
         willChange: "transform",
       }}
     >
+      {imagePriority ? (
+        <Image
+          src="/char.png"
+          alt=""
+          width={CHAR_SHEET_WIDTH}
+          height={CHAR_SHEET_HEIGHT}
+          priority
+          fetchPriority="high"
+          unoptimized
+          aria-hidden
+          className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0"
+        />
+      ) : null}
       <div
         ref={ref}
         className="pixel-art h-full w-full bg-no-repeat"
