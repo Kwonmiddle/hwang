@@ -621,29 +621,6 @@ export function CampaignSite() {
                     </div>
                   </div>
 
-                  <div className="card" style={{ padding: "18px 22px 22px" }}>
-                    <p
-                      className="profile-bio"
-                      style={{
-                        borderBottom: "none",
-                        marginBottom: 14,
-                        paddingBottom: 0,
-                      }}
-                    >
-                      인사말은{" "}
-                      <strong className="profile-bio-strong">「후보 소개」</strong> 탭에서
-                      이어집니다. 공약 요약은 위 카드에서 확인해 주세요.
-                    </p>
-                    <button
-                      type="button"
-                      className="home-cta"
-                      style={{ width: "100%", maxWidth: "100%" }}
-                      onClick={() => setSlide(1)}
-                    >
-                      후보 소개로 이동 →
-                    </button>
-                  </div>
-
                   <CampaignSnsFooter />
                 </div>
               </div>
