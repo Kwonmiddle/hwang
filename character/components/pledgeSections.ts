@@ -5,8 +5,6 @@ export type PledgeSection = {
   icon: string;
   title: string;
   accent: PledgeAccent;
-  /** 제목 옆 노란 뱃지 «노랑» (노동특별동네 가좌 전용) */
-  yellowToneBadge?: boolean;
   bullets: string[];
 };
 
@@ -47,7 +45,6 @@ export const PLEDGE_SECTIONS: PledgeSection[] = [
     icon: "⚙️",
     title: "일하는 시민을 위한 노동특별동네 가좌",
     accent: "yellow",
-    yellowToneBadge: true,
     bullets: [
       "서대문노동공제회로 소득 불안정 노동자 4대 보험 안정적 지원",
       "프리랜서 무상 공유 오피스 설치",

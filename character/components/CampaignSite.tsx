@@ -561,16 +561,11 @@ export function CampaignSite() {
                         >
                           <div className="pledge-header">
                             <div className="pledge-num-badge">{s.num}</div>
-                            <span className="pledge-icon-sm" aria-hidden>
-                              {s.icon}
-                            </span>
                             <div className="pledge-title-wrap">
                               <div className="pledge-title">{s.title}</div>
-                              {s.yellowToneBadge ? (
-                                <span className="pledge-tone-badge pledge-tone-badge--yellow">
-                                  노랑
-                                </span>
-                              ) : null}
+                              <span className="pledge-icon-sm" aria-hidden>
+                                {s.icon}
+                              </span>
                             </div>
                           </div>
                           <ul className="pledge-sub">
