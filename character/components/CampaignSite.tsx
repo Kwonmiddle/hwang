@@ -9,6 +9,7 @@ import {
 } from "react";
 import { SignatureBoard } from "@/components/SignatureBoard";
 import { OtterSprite } from "@/components/OtterSprite";
+import { PLEDGE_SECTIONS } from "@/components/pledgeSections";
 import { useSwipeSlideChange } from "@/hooks/useSwipeSlideChange";
 
 const SWIPE_COACH_STORAGE_KEY = "hwang-swipe-coach-dismissed-v1";
@@ -553,72 +554,32 @@ export function CampaignSite() {
                       className={`acc-body${accPledgeList ? " open" : ""}`}
                       id="acc-pledge-slide2-list"
                     >
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">01</div>
-                          <span className="pledge-icon-sm">🏠</span>
-                          <div className="pledge-title">1인가구 행복 가좌</div>
+                      {PLEDGE_SECTIONS.map((s) => (
+                        <div
+                          key={s.num}
+                          className={`pledge-item pledge-item--accent pledge-item--accent-${s.accent}`}
+                        >
+                          <div className="pledge-header">
+                            <div className="pledge-num-badge">{s.num}</div>
+                            <span className="pledge-icon-sm" aria-hidden>
+                              {s.icon}
+                            </span>
+                            <div className="pledge-title-wrap">
+                              <div className="pledge-title">{s.title}</div>
+                              {s.yellowToneBadge ? (
+                                <span className="pledge-tone-badge pledge-tone-badge--yellow">
+                                  노랑
+                                </span>
+                              ) : null}
+                            </div>
+                          </div>
+                          <ul className="pledge-sub">
+                            {s.bullets.map((line, i) => (
+                              <li key={`${s.num}-${i}`}>{line}</li>
+                            ))}
+                          </ul>
                         </div>
-                        <ul className="pledge-sub">
-                          <li>1인가구 원스탑지원센터</li>
-                          <li>1인가구 무상 청소·심리상담</li>
-                        </ul>
-                      </div>
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">02</div>
-                          <span className="pledge-icon-sm">🤝</span>
-                          <div className="pledge-title">함께 돌봄 가좌</div>
-                        </div>
-                        <ul className="pledge-sub">
-                          <li>구립 심야어린이병원 설치</li>
-                          <li>가좌 공공돌봄센터 설치</li>
-                        </ul>
-                      </div>
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">03</div>
-                          <span className="pledge-icon-sm">🌿</span>
-                          <div className="pledge-title">생태 공존 가좌</div>
-                        </div>
-                        <ul className="pledge-sub">
-                          <li>5산2천 막개발 중단, 재자연화</li>
-                          <li>서대문 탄소중립지원센터 설치</li>
-                        </ul>
-                      </div>
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">04</div>
-                          <span className="pledge-icon-sm">🚌</span>
-                          <div className="pledge-title">15분 교통 가좌</div>
-                        </div>
-                        <ul className="pledge-sub">
-                          <li>마을버스 공영제 무상교통</li>
-                          <li>지하철 서부선 공공 신속 추진</li>
-                        </ul>
-                      </div>
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">05</div>
-                          <span className="pledge-icon-sm">⚧️</span>
-                          <div className="pledge-title">성평등 가좌</div>
-                        </div>
-                        <ul className="pledge-sub">
-                          <li>디지털성폭력 원샷지원센터 설치</li>
-                          <li>여성노동공제회로 4대보험 지원</li>
-                        </ul>
-                      </div>
-                      <div className="pledge-item">
-                        <div className="pledge-header">
-                          <div className="pledge-num-badge">06</div>
-                          <span className="pledge-icon-sm">🤲</span>
-                          <div className="pledge-title">함께 인권 가좌</div>
-                        </div>
-                        <ul className="pledge-sub">
-                          <li>서대문 차별금지 조례 제정</li>
-                          <li>장애인 맞춤 공공일자리 확대</li>
-                        </ul>
-                      </div>
+                      ))}
                     </div>
                   </div>
 

@@ -443,6 +443,33 @@
     font-size: .75rem; font-weight: 900; flex-shrink: 0;
   }
   .pledge-title { font-size: .98rem; font-weight: 800; color: var(--dark); }
+  .pledge-title-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+  }
+  .pledge-title-wrap .pledge-title { flex: 1 1 8rem; min-width: 0; }
+  .pledge-tone-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .68rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    padding: 3px 11px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    line-height: 1.2;
+  }
+  .pledge-tone-badge--yellow {
+    background: linear-gradient(180deg, #fef9c3 0%, #facc15 55%, #eab308 100%);
+    color: #422006;
+    border: 1px solid #ca8a04;
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
   .pledge-icon-sm { font-size: 1.1rem; }
   .pledge-sub {
     margin-left: 38px;
@@ -450,6 +477,31 @@
   }
   .pledge-sub li { list-style: none; }
   .pledge-sub li::before { content: '· '; color: var(--accent); }
+
+  /* 공약 분야별 색 (괄호 안 톤) */
+  .pledge-item--accent-blue .pledge-num-badge { background: #009ee2; color: #fff; }
+  .pledge-item--accent-blue .pledge-title { color: #0077b3; }
+  .pledge-item--accent-blue .pledge-sub li::before { color: #009ee2; }
+
+  .pledge-item--accent-orange .pledge-num-badge { background: #f15623; color: #fff; }
+  .pledge-item--accent-orange .pledge-title { color: #c2410c; }
+  .pledge-item--accent-orange .pledge-sub li::before { color: #f15623; }
+
+  .pledge-item--accent-yellow .pledge-num-badge { background: #ca8a04; color: #fff; }
+  .pledge-item--accent-yellow .pledge-title { color: #854d0e; }
+  .pledge-item--accent-yellow .pledge-sub li::before { color: #ca8a04; }
+
+  .pledge-item--accent-red .pledge-num-badge { background: #ed174c; color: #fff; }
+  .pledge-item--accent-red .pledge-title { color: #be123c; }
+  .pledge-item--accent-red .pledge-sub li::before { color: #ed174c; }
+
+  .pledge-item--accent-purple .pledge-num-badge { background: #6d28d9; color: #fff; }
+  .pledge-item--accent-purple .pledge-title { color: #5b21b6; }
+  .pledge-item--accent-purple .pledge-sub li::before { color: #7c3aed; }
+
+  .pledge-item--accent-green .pledge-num-badge { background: #008c69; color: #fff; }
+  .pledge-item--accent-green .pledge-title { color: #065f46; }
+  .pledge-item--accent-green .pledge-sub li::before { color: #008c69; }
 
   /* ── Timeline ── */
   .timeline { position: relative; padding-left: 28px; }
