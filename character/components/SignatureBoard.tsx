@@ -129,12 +129,15 @@ function SignatureCol({
   const otterMotion = getOtterMotion(raw);
   const otterScale = scaleFromCount(raw);
   const signBtnClass =
-    "relative z-10 box-border inline-flex min-h-[30px] w-full max-w-[92px] shrink-0 items-center justify-center rounded-lg px-1.5 py-1 text-center text-[0.62rem] font-bold leading-tight tracking-tight text-white";
+    "relative z-10 box-border inline-flex min-h-[36px] w-full max-w-[92px] shrink-0 flex-col items-center justify-center rounded-lg px-1.5 py-1 text-center text-[0.62rem] font-bold leading-[1.15] tracking-tight text-white";
 
   const signBtnLabel = (
-    <>
-      수달이 <strong className="font-black">더</strong> 키우기
-    </>
+    <span className="flex flex-col items-center">
+      <span>
+        수달이 <strong className="font-black">더</strong>
+      </span>
+      <span>키우기</span>
+    </span>
   );
 
   const count = showNumbers ? raw : 0;
