@@ -22,8 +22,36 @@ const fetcher = async (url: string): Promise<ApiResponse> => {
   return (await res.json()) as ApiResponse;
 };
 
+const OTTER_BASE_WIDTH = 34;
+const OTTER_BASE_HEIGHT = (OTTER_BASE_WIDTH * 300) / 350;
+/** 커질 때 버튼을 덮지 않도록 상한 */
+const OTTER_SCALE_MAX = 1.65;
+/** 동작3 점프(위로) 여유 */
+const OTTER_MOTION3_JUMP_PAD = 14;
+/** 이 과제(열) 서명 수 기준: 500 초과 동작2, 1000 초과 동작3 */
+const OTTER_MOTION2_THRESHOLD = 500;
+const OTTER_MOTION3_THRESHOLD = 1000;
+
 function scaleFromCount(count: number) {
-  return 1 + Math.floor(count / 100) * 0.1;
+  const linear = 1 + Math.floor(count / 100) * 0.1;
+  return Math.min(OTTER_SCALE_MAX, linear);
+}
+
+function getOtterMotion(count: number): 1 | 2 | 3 {
+  if (count > OTTER_MOTION3_THRESHOLD) return 3;
+  if (count > OTTER_MOTION2_THRESHOLD) return 2;
+  return 1;
+}
+
+function otterAriaLabel(motion: 1 | 2 | 3) {
+  if (motion === 3) return "수달 동작3";
+  if (motion === 2) return "수달 동작2";
+  return "수달 동작1";
+}
+
+function otterSlotMinHeight(scale: number, motion: 1 | 2 | 3) {
+  const jumpPad = motion === 3 ? OTTER_MOTION3_JUMP_PAD : 0;
+  return Math.ceil(OTTER_BASE_HEIGHT * scale) + jumpPad + 2;
 }
 
 /** 막대 100% 기준(건). 숫자는 위쪽이 정확한 값. */
@@ -72,9 +100,6 @@ const ITEMS: Array<{
   },
 ];
 
-/** 이 과제(열) 서명 수가 넘으면 해당 열 수달만 동작2 */
-const OTTER_MOTION2_THRESHOLD = 500;
-
 function SignatureCol({
   item,
   raw,
@@ -85,7 +110,8 @@ function SignatureCol({
   showNumbers: boolean;
 }) {
   const display = useCountUp(showNumbers ? raw : 0);
-  const otterMotion: 1 | 2 = raw > OTTER_MOTION2_THRESHOLD ? 2 : 1;
+  const otterMotion = getOtterMotion(raw);
+  const otterScale = scaleFromCount(raw);
   return (
     <div className="flex flex-col items-center gap-1">
       <div
@@ -110,7 +136,7 @@ function SignatureCol({
           href={item.signUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-0.5 inline-flex w-full max-w-[86px] items-center justify-center rounded-lg px-2 py-1.5 text-center text-[0.72rem] font-bold text-white no-underline"
+          className="relative z-10 mt-0.5 inline-flex w-full max-w-[86px] items-center justify-center rounded-lg px-2 py-1.5 text-center text-[0.72rem] font-bold text-white no-underline"
           style={{ background: item.color }}
         >
           서명하기
@@ -118,18 +144,21 @@ function SignatureCol({
       ) : (
         <button
           type="button"
-          className="mt-0.5 w-full max-w-[86px] rounded-lg px-2 py-1.5 text-[0.72rem] font-bold text-white"
+          className="relative z-10 mt-0.5 w-full max-w-[86px] rounded-lg px-2 py-1.5 text-[0.72rem] font-bold text-white"
           style={{ background: item.color }}
         >
           서명하기
         </button>
       )}
-      <div className="mt-1">
+      <div
+        className="mt-1 flex w-full max-w-[86px] items-end justify-center"
+        style={{ minHeight: otterSlotMinHeight(otterScale, otterMotion) }}
+      >
         <OtterSprite
           motion={otterMotion}
-          width={34}
-          scale={scaleFromCount(raw)}
-          ariaLabel={otterMotion === 2 ? "수달 동작2" : "수달 동작1"}
+          width={OTTER_BASE_WIDTH}
+          scale={otterScale}
+          ariaLabel={otterAriaLabel(otterMotion)}
         />
       </div>
       <div
@@ -216,7 +245,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
       <p className="mx-auto mt-3 max-w-[22rem] text-center text-[0.65rem] leading-relaxed text-slate-400">
         숫자 집계는 약 10분 간격으로 반영됩니다.
         <br />
-        서명 수가 늘어날수록 수달이 커지고, 동작도 달라집니다.
+        서명 수가 늘어날수록 수달이 커지고, 500·1000건을 넘기면 동작이 달라집니다.
       </p>
     </section>
   );

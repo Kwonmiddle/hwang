@@ -905,6 +905,12 @@
       const FRAME_MS = 140;
       const counts = [0, 0, 0, 0];
       const OTTER_MOTION2_THRESHOLD = 500;
+      const OTTER_MOTION3_THRESHOLD = 1000;
+      function colMotionForCount(n) {
+        if (n > OTTER_MOTION3_THRESHOLD) return 3;
+        if (n > OTTER_MOTION2_THRESHOLD) return 2;
+        return 1;
+      }
       let tick = 0;
       let rafId = null;
       let last = 0;
@@ -938,10 +944,12 @@
         board.querySelectorAll('.home-stat-col').forEach(function (col, i) {
           var wrap = col.querySelector('.home-otter');
           if (!wrap) return;
-          var useMotion2 = counts[i] > OTTER_MOTION2_THRESHOLD;
-          wrap.setAttribute('data-motion', useMotion2 ? '2' : '1');
-          wrap.setAttribute('aria-label', useMotion2 ? '수달 동작2' : '수달 동작1');
+          var m = colMotionForCount(counts[i]);
+          wrap.setAttribute('data-motion', String(m));
+          wrap.setAttribute('aria-label', m === 3 ? '수달 동작3' : m === 2 ? '수달 동작2' : '수달 동작1');
+          wrap.style.transform = m === 3 ? 'translateY(' + motion3JumpTranslateY(tick) + 'px)' : '';
         });
+        var statCols = board.querySelectorAll('.home-stat-col');
         for (var i = 0; i < sprites.length; i++) {
           var sprite = sprites[i];
           var w = sprite.offsetWidth;
@@ -949,8 +957,8 @@
           if (w < 1) continue;
           sprite.style.backgroundImage = "url('char.png')";
           sprite.style.backgroundSize = w * SHEET_FRAMES + 'px ' + h + 'px';
-          var colMotion2 = counts[i] > OTTER_MOTION2_THRESHOLD;
-          var f = colMotion2 ? motion2FrameAtTick(tick) : motion1FrameAtTick(tick);
+          var m = colMotionForCount(counts[i]);
+          var f = m === 3 ? motion3FrameAtTick(tick) : m === 2 ? motion2FrameAtTick(tick) : motion1FrameAtTick(tick);
           sprite.style.backgroundPosition = -f * w + 'px 0';
         }
         if (heroWrap && heroSprite) {
