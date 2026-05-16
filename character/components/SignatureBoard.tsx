@@ -49,10 +49,9 @@ function otterAriaLabel(motion: 1 | 2 | 3) {
   return "수달 동작1";
 }
 
-function otterSlotMinHeight(scale: number, motion: 1 | 2 | 3) {
-  const jumpPad = motion === 3 ? OTTER_MOTION3_JUMP_PAD : 0;
-  return Math.ceil(OTTER_BASE_HEIGHT * scale) + jumpPad + 2;
-}
+/** 네 열 수달 영역 공통 높이(최대 스케일·동작3 점프 기준) — 하단 정렬용 */
+const OTTER_ROW_HEIGHT_PX =
+  Math.ceil(OTTER_BASE_HEIGHT * OTTER_SCALE_MAX) + OTTER_MOTION3_JUMP_PAD + 4;
 
 /** 막대 100% 기준(건). 숫자는 위쪽이 정확한 값. */
 const FISH_METER_MAX = 800;
@@ -112,10 +111,19 @@ function SignatureCol({
   const display = useCountUp(showNumbers ? raw : 0);
   const otterMotion = getOtterMotion(raw);
   const otterScale = scaleFromCount(raw);
+  const signBtnClass =
+    "relative z-10 box-border inline-flex min-h-[30px] w-full max-w-[92px] shrink-0 items-center justify-center rounded-lg px-1.5 py-1 text-center text-[0.62rem] font-bold leading-tight tracking-tight text-white";
+
+  const signBtnLabel = (
+    <>
+      수달이 <strong className="font-black">더</strong> 키우기
+    </>
+  );
+
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex h-full min-h-0 flex-col items-center gap-1">
       <div
-        className="min-h-[1.25rem] min-w-[2.25rem] text-center text-xl font-black tabular-nums leading-none"
+        className="shrink-0 text-center text-xl font-black tabular-nums leading-none"
         style={{ color: item.color }}
         aria-live="polite"
       >
@@ -126,7 +134,7 @@ function SignatureCol({
         )}
       </div>
       <div
-        className="whitespace-pre-line text-center text-[0.74rem] font-semibold leading-snug"
+        className="flex min-h-[2.75rem] shrink-0 items-center justify-center whitespace-pre-line px-0.5 text-center text-[0.74rem] font-semibold leading-snug"
         style={{ color: item.color }}
       >
         {item.title}
@@ -136,23 +144,24 @@ function SignatureCol({
           href={item.signUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="relative z-10 mt-0.5 inline-flex w-full max-w-[86px] items-center justify-center rounded-lg px-2 py-1.5 text-center text-[0.72rem] font-bold text-white no-underline"
+          className={`${signBtnClass} no-underline`}
           style={{ background: item.color }}
+          aria-label={`${item.title.replace(/\n/g, " ")} 수달이 더 키우기 (새 창)`}
         >
-          서명하기
+          {signBtnLabel}
         </a>
       ) : (
         <button
           type="button"
-          className="relative z-10 mt-0.5 w-full max-w-[86px] rounded-lg px-2 py-1.5 text-[0.72rem] font-bold text-white"
+          className={signBtnClass}
           style={{ background: item.color }}
         >
-          서명하기
+          {signBtnLabel}
         </button>
       )}
       <div
-        className="mt-1 flex w-full max-w-[86px] items-end justify-center"
-        style={{ minHeight: otterSlotMinHeight(otterScale, otterMotion) }}
+        className="flex min-h-0 w-full max-w-[86px] flex-1 flex-col justify-end"
+        style={{ minHeight: OTTER_ROW_HEIGHT_PX }}
       >
         <OtterSprite
           motion={otterMotion}
@@ -162,7 +171,7 @@ function SignatureCol({
         />
       </div>
       <div
-        className="mt-2 w-full max-w-[92px]"
+        className="mt-auto w-full max-w-[92px] shrink-0"
         aria-hidden
         title={showNumbers ? `서명 ${raw.toLocaleString("ko-KR")}건` : "집계 불러오는 중"}
       >
@@ -232,7 +241,7 @@ export function SignatureBoard({ embedded = false }: SignatureBoardProps) {
         황경산 구의원 후보가 시민들과 함께 해결하겠습니다!
       </p>
 
-      <div className="mt-6 grid grid-cols-4 gap-x-1 gap-y-3">
+      <div className="mt-6 grid grid-cols-4 items-stretch gap-x-1">
         {ITEMS.map((it) => (
           <SignatureCol
             key={it.key}

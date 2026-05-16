@@ -172,6 +172,7 @@
     cursor: pointer;
     letter-spacing: -0.05em;
   }
+  .home-stat-btn strong { font-weight: 900; }
   .home-stat-btn:hover { opacity: 0.9; }
   .home-stat-btn:active { transform: scale(0.97); }
   /* 홈 통계 보드: 열별 컬러 (순서: 내란세력 → 1인가구 → 백련산 → 서부선) */
