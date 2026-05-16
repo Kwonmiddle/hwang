@@ -54,7 +54,7 @@ const OTTER_ROW_HEIGHT_PX =
   Math.ceil(OTTER_BASE_HEIGHT * OTTER_SCALE_MAX) + OTTER_MOTION3_JUMP_PAD + 4;
 
 /** 막대 100% 기준(건). 숫자는 위쪽이 정확한 값. */
-const FISH_METER_MAX = 800;
+const FISH_METER_MAX = 2000;
 
 /** 탱크 안에 그릴 물고기 최대 개수(DOM 부담·영역 초과분은 +n). */
 const FISH_STACK_CAP = 160;
@@ -160,7 +160,7 @@ function SignatureCol({
         </button>
       )}
       <div
-        className="flex min-h-0 w-full max-w-[86px] flex-1 flex-col justify-end"
+        className="flex min-h-0 w-full max-w-[92px] flex-1 flex-col items-center justify-end"
         style={{ minHeight: OTTER_ROW_HEIGHT_PX }}
       >
         <OtterSprite
