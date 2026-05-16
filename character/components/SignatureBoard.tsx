@@ -56,14 +56,31 @@ const OTTER_ROW_HEIGHT_PX =
 /** 막대 100% 기준(건). 숫자는 위쪽이 정확한 값. */
 const FISH_METER_MAX = 2000;
 
-/** 탱크 안에 그릴 물고기 최대 개수(DOM 부담·영역 초과분은 +n). */
-const FISH_STACK_CAP = 160;
+/** 탱크 고정 칸 수(8×12). 막대와 동일하게 FISH_METER_MAX 기준으로 채움. */
+const FISH_TANK_SLOTS = 96;
+const FISH_TANK_COLS = 8;
+
+function fishTankFillRatio(raw: number) {
+  if (raw <= 0) return 0;
+  return Math.min(1, raw / FISH_METER_MAX);
+}
 
 function fishMeterPercent(raw: number) {
   if (raw <= 0) return 0;
-  const linear = (raw / FISH_METER_MAX) * 100;
+  const linear = fishTankFillRatio(raw) * 100;
   const boosted = Math.max(6, linear);
   return Math.min(100, boosted);
+}
+
+/** 탱크에 표시할 물고기 칸 수(1건=1마리 아님, 2000건=96칸). */
+function fishTankSlotsFilled(raw: number) {
+  if (raw <= 0) return 0;
+  const n = Math.round(fishTankFillRatio(raw) * FISH_TANK_SLOTS);
+  return Math.max(1, Math.min(FISH_TANK_SLOTS, n));
+}
+
+function isFishTankSlotFilled(slotIndex: number, filled: number) {
+  return slotIndex >= FISH_TANK_SLOTS - filled;
 }
 
 const ITEMS: Array<{
@@ -119,6 +136,10 @@ function SignatureCol({
       수달이 <strong className="font-black">더</strong> 키우기
     </>
   );
+
+  const count = showNumbers ? raw : 0;
+  const tankFillRatio = fishTankFillRatio(count);
+  const tankSlotsFilled = fishTankSlotsFilled(count);
 
   return (
     <div className="flex h-full min-h-0 flex-col items-center gap-1">
@@ -184,19 +205,44 @@ function SignatureCol({
             }}
           />
         </div>
-        <div className="relative flex h-[112px] w-full flex-wrap content-end items-end justify-center gap-px overflow-hidden rounded-xl border border-slate-900/10 bg-gradient-to-b from-slate-50 to-slate-100/90 px-0.5 pb-0.5 shadow-inner">
-          {showNumbers && raw > FISH_STACK_CAP ? (
+        <div className="relative h-[112px] w-full overflow-hidden rounded-xl border border-slate-900/10 bg-gradient-to-b from-slate-50 to-slate-100/90 shadow-inner">
+          <div
+            className="absolute inset-x-0 bottom-0 z-0 transition-[height] duration-700 ease-out"
+            style={{
+              height: `${tankFillRatio * 100}%`,
+              backgroundColor: item.color,
+              opacity: 0.24,
+            }}
+          />
+          <div
+            className="relative z-[1] grid h-full w-full gap-px p-0.5"
+            style={{
+              gridTemplateColumns: `repeat(${FISH_TANK_COLS}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${FISH_TANK_SLOTS / FISH_TANK_COLS}, minmax(0, 1fr))`,
+            }}
+          >
+            {Array.from({ length: FISH_TANK_SLOTS }).map((_, i) => {
+              const filled = showNumbers && isFishTankSlotFilled(i, tankSlotsFilled);
+              return (
+                <span
+                  key={i}
+                  className="flex items-center justify-center leading-none"
+                  aria-hidden
+                >
+                  {filled ? (
+                    <span className="select-none text-[9px]">🐟</span>
+                  ) : (
+                    <span className="text-[5px] text-slate-300/60">·</span>
+                  )}
+                </span>
+              );
+            })}
+          </div>
+          {showNumbers && raw > FISH_METER_MAX ? (
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-white from-40% to-transparent px-0.5 pb-3 pt-1 text-center text-[0.65rem] font-bold leading-tight text-slate-600">
-              +{(raw - FISH_STACK_CAP).toLocaleString("ko-KR")}
+              +{(raw - FISH_METER_MAX).toLocaleString("ko-KR")}
             </div>
           ) : null}
-          {showNumbers
-            ? Array.from({ length: Math.min(raw, FISH_STACK_CAP) }).map((_, i) => (
-                <span key={i} className="select-none text-[10px] leading-[1.05]">
-                  🐟
-                </span>
-              ))
-            : null}
         </div>
       </div>
     </div>
